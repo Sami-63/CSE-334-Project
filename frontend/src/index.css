@@ -1,0 +1,9 @@
+main {
+  min-height: 80vh;
+}
+
+/* RoomList.css */
+.card-footer {
+  border-top: none;
+  background-color: white;
+}
