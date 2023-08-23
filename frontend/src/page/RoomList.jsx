@@ -5,6 +5,7 @@ import { GetAllRooms } from "../actions/roomActions";
 
 import Loader from "../conponents/Loader";
 import RoomCard from "../conponents/RoomCard";
+import FilterBox from "../conponents/FilterBox";
 
 const RoomList = () => {
   const { getRooms, isLoading, error } = GetAllRooms();
@@ -29,7 +30,7 @@ const RoomList = () => {
     <Container className='mt-5'>
       <Row>
         <h2 className='text-center mb-4'>Our Rooms</h2>
-
+        <FilterBox />
         {error && <Alert variant='danger'>{error}</Alert>}
         {isLoading && <Loader />}
 

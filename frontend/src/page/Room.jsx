@@ -9,37 +9,47 @@ import {
   Form,
   Alert,
 } from "react-bootstrap";
-
 import { useNavigate, useParams } from "react-router-dom";
-
 import { GetRoom } from "../actions/roomActions";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Loader from "../conponents/Loader";
+import PaymentModal from "../conponents/PaymentModal";
 
 const Room = () => {
   const { id } = useParams();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
-  const [rating, setRating] = useState(0);
-  const [personCount, setPersonCount] = useState(1);
-  const [bedroomCount, setBedroomCount] = useState(1);
-  const [acCount, setAcCount] = useState(0);
-  const [imgUrl, setImgUrl] = useState("");
+  const [roomData, setRoomData] = useState({
+    title: "",
+    description: "",
+    price: 0,
+    rating: 0,
+    personCount: 1,
+    bedroomCount: 1,
+    acCount: 0,
+    imgUrl: "",
+  });
 
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
+  const [showPaymentModal, setShowPaymentModal] = useState(false); // New state for PaymentModal
 
   const { getRoom, isLoading, error } = GetRoom();
-
   const { user } = useAuthContext();
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
+  const handleOpenPaymentModal = () => {
+    setShowPaymentModal(true);
+  };
+
+  const handleClosePaymentModal = () => {
+    setShowPaymentModal(false);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (!user) navigate("/login");
     else {
-      //
+      handleOpenPaymentModal(); // Open PaymentModal when submitting the form
     }
   };
 
@@ -48,17 +58,7 @@ const Room = () => {
       try {
         if (id) {
           const response = await getRoom(id);
-
-          console.log("response => ", response);
-
-          setTitle(response.title);
-          setDescription(response.description);
-          setPrice(response.price);
-          setRating(response.rating);
-          setPersonCount(response.personCount);
-          setBedroomCount(response.bedroomCount);
-          setAcCount(response.acCount);
-          setImgUrl(response.imgUrl);
+          setRoomData(response);
         }
       } catch (error) {
         console.error("Error fetching room info:", error);
@@ -73,39 +73,38 @@ const Room = () => {
   return (
     <Card>
       {isLoading && <Loader />}
-      {error && <Alert>{error}</Alert>}
+      {error && <Alert variant='danger'>{error}</Alert>}
       {!isLoading && (
         <Card.Body>
-          <Card.Title>{title}</Card.Title>
-          <Card.Text>Rating: {rating}/5</Card.Text>
+          <Card.Title>{roomData.title}</Card.Title>
+          <Card.Text>Rating: {roomData.rating}/5</Card.Text>
           <Container>
             <Row>
               <Col md={8}>
-                <Image src={imgUrl} alt={title} fluid style={{}} />
+                <Image src={roomData.imgUrl} alt={roomData.title} fluid />
               </Col>
               <Col md={4}>
                 <Row>
                   <Col>
                     <Card.Text>Capacity:</Card.Text>
-                    <Card.Text>{personCount} persons</Card.Text>
-                    <Card.Text>{bedroomCount} bedrooms</Card.Text>
+                    <Card.Text>{roomData.personCount} persons</Card.Text>
+                    <Card.Text>{roomData.bedroomCount} bedrooms</Card.Text>
                     <Card.Text>
-                      Air Conditioning: {acCount ? "Yes" : "No"}
+                      Air Conditioning: {roomData.acCount ? "Yes" : "No"}
                     </Card.Text>
-                    <Card.Text>{description}</Card.Text>
+                    <Card.Text>{roomData.description}</Card.Text>
                   </Col>
                 </Row>
                 <Row>
                   <Form onSubmit={handleSubmit}>
                     <Form.Group controlId='checkInDate'>
-                      <p className='my-2'>Price: {price}</p>
+                      <p className='my-2'>Price: {roomData.price}</p>
                       <Form.Label>Check-in Date</Form.Label>
                       <Form.Control
                         type='date'
                         value={checkInDate}
+                        min={today}
                         onChange={(e) => setCheckInDate(e.target.value)}
-                        min={today} // Set the minimum date as today
-                        max={checkOutDate || undefined} // Disable dates after the check-out date
                         required
                       />
                     </Form.Group>
@@ -114,8 +113,8 @@ const Room = () => {
                       <Form.Control
                         type='date'
                         value={checkOutDate}
+                        min={checkInDate || today}
                         onChange={(e) => setCheckOutDate(e.target.value)}
-                        min={checkInDate || today} // Disable dates before the check-in date or today
                         required
                       />
                     </Form.Group>
@@ -128,6 +127,17 @@ const Room = () => {
             </Row>
           </Container>
         </Card.Body>
+      )}
+
+      {/* PaymentModal component */}
+      {showPaymentModal && (
+        <PaymentModal
+          show={showPaymentModal}
+          handleClose={handleClosePaymentModal}
+          selectedRoom={roomData}
+          price={roomData.price}
+          searchData={{}} // Pass your searchData here
+        />
       )}
     </Card>
   );
