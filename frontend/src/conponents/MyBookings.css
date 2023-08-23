@@ -1,0 +1,81 @@
+/* MyBookings.css */
+
+.my-bookings {
+    margin: 20px;
+  }
+  
+  .my-bookings h2 {
+    margin-bottom: 10px;
+  }
+  
+  .my-bookings table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .my-bookings th,
+  .my-bookings td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+  
+  .my-bookings th {
+    background-color: #f2f2f2;
+  }
+  
+  .my-bookings tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .my-bookings button {
+    padding: 5px 10px;
+    background-color: #1a6dc0;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* Popup Styles */
+  .popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .popup-content {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    text-align: center;
+  }
+  
+  .rating-stars {
+    margin-bottom: 20px;
+  }
+  
+  .star-icon {
+    font-size: 24px;
+    color: #ccc;
+    margin: 0 5px;
+    cursor: pointer;
+  }
+  
+  .star-selected {
+    color: #ffbb00;
+  }
+  
+  .popup button {
+    margin-right: 10px;
+  }
+  
+  .popup button:last-child {
+    margin-right: 0;
+  }
