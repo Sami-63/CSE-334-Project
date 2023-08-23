@@ -1,0 +1,81 @@
+/* UserDashboard.css */
+
+.user-dashboard {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 240px;
+    height: 100%;
+    background-color: #161718;
+    transition: width 0.3s ease-in-out;
+    overflow: hidden;
+    margin-top: -20px;
+    margin-left: -118px;
+  }
+  
+  .sidebar-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #1a6dc0;
+    border-bottom: 1px solid #dee2e6;
+    cursor: pointer;
+    height: 100px;
+  }
+  
+  .sidebar-toggle-icon {
+    cursor: pointer;
+    color: #fff;
+    font-size: 18px;
+  }
+  
+  .sidebar-menu {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .sidebar-menu-item {
+    padding: 10px;
+    cursor: pointer;
+    color: white;
+  }
+  
+  .sidebar-menu-item.active {
+    font-weight: bold;
+  }
+  
+  .main-content {
+    flex: 1;
+    padding: 20px;
+    transition: margin-left 0.3s ease-in-out;
+    display: flex;
+  }
+  
+  .content {
+    flex: 1;
+  }
+  
+  .sidebar-collapsed {
+    width: 560px;
+  }
+  
+ 
+  
+  .sidebar-collapsed .main-content {
+    margin-left: 260px;
+  }
+  
+  .sidebar-menu-item {
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+    transition: padding 0.3s ease;
+  }
+  
+  .sidebar-collapsed .add-room-form {
+    padding: 10px 10px;
+  }

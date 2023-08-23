@@ -13,6 +13,8 @@ import RegisterPage from "./page/RegisterPage";
 import Profile from "./page/Profile";
 import RoomList from "./page/RoomList";
 import Room from "./page/Room";
+import AdminDashboad from "./page/AdminDashboad";
+import UserDashboard from "./page/UserDashboard";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             <Routes>
               <Route path='/room/:id' element={<Room />} />
               <Route path='/roomlist' element={<RoomList />} />
+              <Route path='/dashboard' element={<AdminDashboad />} />
+              <Route path='/userdashboard' element={<UserDashboard />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/register' element={<RegisterPage />} />
               <Route path='/login' element={<LoginPage />} />
