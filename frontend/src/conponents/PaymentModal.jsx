@@ -1,18 +1,48 @@
-import { useState } from "react";
+/* eslint-disable react/prop-types */
+import { useEffect, useState } from "react";
 import "./PaymentModal.css"; // Your CSS file
+import { MakeBooking } from "../actions/bookingActions";
+import Loader from "./Loader";
+import { Alert } from "react-bootstrap";
+import { CheckBooking } from "../actions/roomActions";
 
-function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
+// eslint-disable-next-line react/prop-types
+const PaymentModal = ({ show, handleClose, selectedRoom, setText }) => {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
-  const [numOfPeople, setNumOfPeople] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
-  const [selectedBank, setSelectedBank] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [bankAccount, setBankAccount] = useState("");
-  const [mobileBankingNumber, setMobileBankingNumber] = useState("");
   const [pin, setPin] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [calculatedPrice, setCalculatedPrice] = useState(selectedRoom.price);
+
+  const [message, setMessage] = useState(null);
+  const {
+    checkBooking,
+    isLoading: isBookingLoading,
+    error: BookingError,
+  } = CheckBooking();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (checkInDate && checkOutDate) {
+        const id = selectedRoom.id;
+        const success = await checkBooking(id, checkInDate, checkOutDate);
+        if (success && checkInDate <= checkOutDate) {
+          setMessage({
+            type: "success",
+            msg: "Booking possible",
+          });
+        } else {
+          setMessage({
+            type: "danger",
+            msg: "Booking not possible",
+          });
+        }
+      }
+    };
+    console.log("checkInDate, checkOutDate =>", checkInDate, checkOutDate);
+    fetchData();
+  }, [checkInDate, checkOutDate, selectedRoom.id]);
 
   const handleCheckInDateChange = (date) => {
     setCheckInDate(date);
@@ -34,18 +64,10 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
     }
   };
 
-  const handleSubmit = (e) => {
+  const { bookNow, isLoading, error } = MakeBooking();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (paymentMethod === "bank" && (!bankName || !bankAccount)) {
-      setErrorMessage("Please provide bank name and bank account number.");
-      return;
-    }
-
-    if (paymentMethod === "mobile" && !mobileBankingNumber) {
-      setErrorMessage("Please provide mobile banking number.");
-      return;
-    }
 
     if (!pin) {
       setErrorMessage("Please provide your PIN.");
@@ -54,33 +76,37 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
 
     // Here you can handle the form submission, like making a payment request
     // using the entered data
+
+    const id = selectedRoom.id;
     const bookingData = {
       checkInDate,
       checkOutDate,
-      numOfPeople,
-      paymentMethod,
-      bankName,
-      bankAccount,
-      mobileBankingNumber,
-      pin,
-      selectedRoom,
+      id,
       calculatedPrice,
-      searchData,
     };
     console.log(bookingData);
     console.log("PaymentModal - selectedRoom:", selectedRoom);
     console.log("PaymentModal - calculatedPrice:", calculatedPrice);
-    console.log("PaymentModal - searchData:", searchData);
 
     // After handling the payment, you can close the modal
-    handleClose();
+
+    const { success, error } = await bookNow(
+      checkInDate,
+      checkOutDate,
+      id,
+      calculatedPrice
+    );
+    if (!error && success) {
+      handleClose();
+      setText("Booking successful");
+    } else {
+      setErrorMessage("Booking failed");
+    }
   };
 
   const handlePaymentMethodChange = (e) => {
     setPaymentMethod(e.target.value);
-    setBankName("");
-    setBankAccount("");
-    setMobileBankingNumber("");
+
     setErrorMessage("");
   };
 
@@ -91,12 +117,11 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
   return (
     <div className='modal-overlay'>
       <div className='payment-modal'>
-        <button className='close-button' onClick={handleClose}>
-          Close
-        </button>
         <h2>Confirm Your Booking</h2>
         <p>Room: {selectedRoom && selectedRoom.description}</p>
         <p>Calculated Price: ${calculatedPrice}</p>
+        {isBookingLoading && <Loader />}
+        {BookingError && <Alert> {BookingError} </Alert>}
         <form onSubmit={handleSubmit}>
           <div className='form-row'>
             <label htmlFor='checkInDate'>Check-in Date:</label>
@@ -108,16 +133,7 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
               onChange={(e) => handleCheckInDateChange(e.target.value)}
               required
             />
-            <label htmlFor='numOfPeople'>Number of People:</label>
-            <input
-              type='number'
-              id='numOfPeople'
-              value={numOfPeople}
-              onChange={(e) => setNumOfPeople(e.target.value)}
-              required
-            />
-          </div>
-          <div className='form-row'>
+
             <label htmlFor='checkOutDate'>Check-out Date:</label>
             <input
               type='date'
@@ -127,6 +143,8 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
               onChange={(e) => handleCheckOutDateChange(e.target.value)}
               required
             />
+          </div>
+          <div className='form-row'>
             <label htmlFor='paymentMethod'>Payment Method:</label>
             <select
               id='paymentMethod'
@@ -135,56 +153,24 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
               required
             >
               <option value=''>Select a payment method</option>
-              <option value='credit'>Credit Card</option>
-              <option value='paypal'>PayPal</option>
               <option value='bank'>Bank Transfer</option>
               <option value='mobile'>Mobile Banking</option>
             </select>
           </div>
-          {paymentMethod === "bank" && (
+
+          {paymentMethod && (
             <div className='form-row'>
-              <label htmlFor='bankName'>Bank Name:</label>
+              <label htmlFor='pin'>PIN:</label>
               <input
-                type='text'
-                id='bankName'
-                value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
-                required
-              />
-              <label htmlFor='bankAccount'>Bank Account:</label>
-              <input
-                type='text'
-                id='bankAccount'
-                value={bankAccount}
-                onChange={(e) => setBankAccount(e.target.value)}
+                type='password'
+                id='pin'
+                value={pin}
+                onChange={(e) => setPin(e.target.value)}
                 required
               />
             </div>
           )}
-          {paymentMethod === "mobile" && (
-            <div className='form-row'>
-              <label htmlFor='mobileBankingNumber'>
-                Mobile Banking Number:
-              </label>
-              <input
-                type='text'
-                id='mobileBankingNumber'
-                value={mobileBankingNumber}
-                onChange={(e) => setMobileBankingNumber(e.target.value)}
-                required
-              />
-            </div>
-          )}
-          <div className='form-row'>
-            <label htmlFor='pin'>PIN:</label>
-            <input
-              type='password'
-              id='pin'
-              value={pin}
-              onChange={(e) => setPin(e.target.value)}
-              required
-            />
-          </div>
+          {message && <Alert variant={message.type}> {message.msg} </Alert>}
           {errorMessage && <p className='error-message'>{errorMessage}</p>}
           <div className='form-row buttons'>
             <button
@@ -194,7 +180,13 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
             >
               Cancel
             </button>
-            <button className='confirm-button' type='submit'>
+            {error && <Alert>{error}</Alert>}
+            {isLoading && <Loader />}
+            <button
+              className='confirm-button'
+              type='submit'
+              disabled={isLoading}
+            >
               Confirm Payment
             </button>
           </div>
@@ -202,6 +194,6 @@ function PaymentModal({ show, handleClose, selectedRoom, searchData }) {
       </div>
     </div>
   );
-}
+};
 
 export default PaymentModal;

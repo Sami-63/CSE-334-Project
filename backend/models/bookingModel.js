@@ -159,12 +159,40 @@ Booking.getBookingsByEmail = async (email) => {
 
 Booking.filterRoom = async (
   checkinDate,
-  checkOutdate,
-  noOfBedrooms = 0,
-  noOfPeople = 0,
-  acRequired = 0
+  checkoutdate,
+  noOfBedrooms,
+  noOfPeople,
+  acRequired
 ) => {
+  // console.log("[Model]  checkinDate -> ", checkinDate);
+  // console.log("[Model]  checkOutdate -> ", checkoutdate);
+  // console.log("[Model]  noOfBedrooms -> ", noOfBedrooms);
+  // console.log("[Model]  noOfPeople -> ", noOfPeople);
+  // console.log("[Model]  acRequired -> ", acRequired);
+
+  // if (noOfBedrooms === undefined || noOfBedrooms === null) noOfBedrooms = 0;
+  // if (noOfPeople === undefined || noOfPeople === null) noOfPeople = 0;
+  // if (acRequired === undefined || acRequired === null) acRequired = 0;
+
   try {
+    noOfBedrooms = Number(noOfBedrooms);
+    noOfPeople = Number(noOfPeople);
+    acRequired = Number(acRequired);
+
+    // let query = "SELECT * FROM room WHERE";
+
+    // if (checkinDate && checkoutdate) {
+    //   query += `WHERE id NOT IN (
+    //     SELECT DISTINCT roomId
+    //     FROM booking
+    //     WHERE (startDate <= ${checkinDate} AND endDate >= ${checkinDate})
+    //        OR (startDate <= ${checkoutdate} AND endDate >= ${checkoutdate})
+    //        OR (${checkinDate} <= startDate AND ${checkoutdate} >= startDate)
+    //        OR (${checkinDate} <= endDate AND ${checkoutdate} >= endDate)
+
+    //     )`;
+    // }
+
     const bookings = await new Promise((resolve, reject) => {
       conn.query(
         `SELECT *
@@ -184,12 +212,12 @@ Booking.filterRoom = async (
         [
           checkinDate,
           checkinDate,
-          checkOutdate,
-          checkOutdate,
+          checkoutdate,
+          checkoutdate,
           checkinDate,
-          checkOutdate,
+          checkoutdate,
           checkinDate,
-          checkOutdate,
+          checkoutdate,
           noOfBedrooms,
           noOfPeople,
           acRequired,
@@ -204,6 +232,46 @@ Booking.filterRoom = async (
     });
 
     return { bookings };
+  } catch (error) {
+    return { error };
+  }
+};
+
+Booking.isBookingPossible = async (id, startDate, endDate) => {
+  try {
+    const response = await new Promise((resolve, reject) => {
+      conn.query(
+        `SELECT *
+        FROM room
+        WHERE id = ? AND id NOT IN (
+            SELECT DISTINCT roomId
+            FROM booking
+            WHERE (startDate <= ? AND endDate >= ?)
+               OR (startDate <= ? AND endDate >= ?)
+               OR (? <= startDate AND ? >= startDate)
+               OR (? <= endDate AND ? >= endDate)
+        )`,
+        [
+          id,
+          startDate,
+          startDate,
+          endDate,
+          endDate,
+          startDate,
+          endDate,
+          startDate,
+          endDate,
+        ],
+        (err, res) => {
+          if (err) reject(err);
+          else {
+            resolve(res.length > 0);
+          }
+        }
+      );
+    });
+
+    return { response };
   } catch (error) {
     return { error };
   }

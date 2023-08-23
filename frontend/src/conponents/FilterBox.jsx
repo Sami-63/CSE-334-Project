@@ -4,22 +4,34 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "./FilterBox.css";
 
-function FilterBox({ onBookRoom }) {
+// eslint-disable-next-line react/prop-types
+const FilterBox = ({ setRooms, filter }) => {
   const [checkInDate, setCheckInDate] = useState(null);
   const [checkOutDate, setCheckOutDate] = useState(null);
   const [numOfBedrooms, setNumOfBedrooms] = useState("");
   const [acRequired, setAcRequired] = useState(false);
   const [numOfPeople, setNumOfPeople] = useState("");
 
-  const handleSearch = () => {
+  // const { filter, isLoading, error } = FilterRooms();
+
+  const handleSearch = async () => {
     // Call the onBookRoom function to pass the search data to the parent component
-    onBookRoom(
+
+    // console.log("checkInDate => ", checkInDate);
+    // console.log("checkOutDate => ", checkOutDate);
+    // console.log("numOfBedrooms => ", numOfBedrooms);
+    // console.log("acRequired => ", acRequired);
+    // console.log("numOfPeople => ", numOfPeople);
+
+    const rooms = await filter(
       checkInDate,
       checkOutDate,
       numOfBedrooms,
-      acRequired,
-      numOfPeople
+      numOfPeople,
+      acRequired
     );
+    console.log(rooms);
+    setRooms(rooms);
   };
 
   return (
@@ -90,6 +102,6 @@ function FilterBox({ onBookRoom }) {
       </div>
     </div>
   );
-}
+};
 
 export default FilterBox;

@@ -8,6 +8,7 @@ import {
   giveRating,
   myBookings,
   filterRoom,
+  isBookingPossible,
 } from "../controllers/bookingController.js";
 
 const router = express.Router();
@@ -18,6 +19,7 @@ router.post("/create", protect, createBooking);
 router.put("/rating", protect, giveRating);
 router.put("/payment", protect, confirmPayment);
 
-router.get("/filter-rooms", filterRoom);
+router.post("/filter-rooms", filterRoom);
+router.post("/check-booking", isBookingPossible);
 
 export default router;

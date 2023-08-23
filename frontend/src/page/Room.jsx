@@ -6,7 +6,6 @@ import {
   Container,
   Image,
   Row,
-  Form,
   Alert,
 } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
@@ -17,6 +16,7 @@ import PaymentModal from "../conponents/PaymentModal";
 
 const Room = () => {
   const { id } = useParams();
+  const [message, setMessage] = useState("");
 
   const [roomData, setRoomData] = useState({
     title: "",
@@ -29,8 +29,6 @@ const Room = () => {
     imgUrl: "",
   });
 
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
   const [showPaymentModal, setShowPaymentModal] = useState(false); // New state for PaymentModal
 
   const { getRoom, isLoading, error } = GetRoom();
@@ -68,8 +66,6 @@ const Room = () => {
     fetchData();
   }, [id]);
 
-  const today = new Date().toISOString().split("T")[0];
-
   return (
     <Card>
       {isLoading && <Loader />}
@@ -83,7 +79,7 @@ const Room = () => {
               <Col md={8}>
                 <Image src={roomData.imgUrl} alt={roomData.title} fluid />
               </Col>
-              <Col md={4}>
+              <Col md={3}>
                 <Row>
                   <Col>
                     <Card.Text>Capacity:</Card.Text>
@@ -96,38 +92,22 @@ const Room = () => {
                   </Col>
                 </Row>
                 <Row>
-                  <Form onSubmit={handleSubmit}>
-                    <Form.Group controlId='checkInDate'>
-                      <p className='my-2'>Price: {roomData.price}</p>
-                      <Form.Label>Check-in Date</Form.Label>
-                      <Form.Control
-                        type='date'
-                        value={checkInDate}
-                        min={today}
-                        onChange={(e) => setCheckInDate(e.target.value)}
-                        required
-                      />
-                    </Form.Group>
-                    <Form.Group controlId='checkOutDate'>
-                      <Form.Label>Check-out Date</Form.Label>
-                      <Form.Control
-                        type='date'
-                        value={checkOutDate}
-                        min={checkInDate || today}
-                        onChange={(e) => setCheckOutDate(e.target.value)}
-                        required
-                      />
-                    </Form.Group>
-                    <Button variant='primary' type='submit' className='my-3'>
-                      Book Now
-                    </Button>
-                  </Form>
+                  <Button
+                    variant='primary'
+                    type='submit'
+                    className='my-3'
+                    onClick={handleSubmit}
+                  >
+                    Book Now
+                  </Button>
                 </Row>
               </Col>
             </Row>
           </Container>
         </Card.Body>
       )}
+
+      {message && <Alert variant='success'>{message}</Alert>}
 
       {/* PaymentModal component */}
       {showPaymentModal && (
@@ -136,7 +116,7 @@ const Room = () => {
           handleClose={handleClosePaymentModal}
           selectedRoom={roomData}
           price={roomData.price}
-          searchData={{}} // Pass your searchData here
+          setText={setMessage}
         />
       )}
     </Card>

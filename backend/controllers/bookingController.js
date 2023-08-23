@@ -23,7 +23,7 @@ const createBooking = asyncHandler(async (req, res) => {
     const { success, error } = await Booking.create(booking);
 
     if (!error && success) {
-      res.send({
+      res.status(200).send({
         success: true,
       });
     } else {
@@ -136,12 +136,20 @@ const myBookings = asyncHandler(async (req, res) => {
 });
 
 const filterRoom = asyncHandler(async (req, res) => {
-  const { checkinDate, checkOutdate, noOfBedrooms, noOfPeople, acRequired } =
+  const { checkinDate, checkoutdate, noOfBedrooms, noOfPeople, acRequired } =
     req.body;
+
+  // console.log("body => ", req.body);
+
+  // console.log("[controller]  checkinDate -> ", checkinDate);
+  // console.log("[controller]  checkOutdate -> ", checkoutdate);
+  // console.log("[controller]  noOfBedrooms -> ", noOfBedrooms);
+  // console.log("[controller]  noOfPeople -> ", noOfPeople);
+  // console.log("[controller]  acRequired -> ", acRequired);
 
   const { bookings, error } = await Booking.filterRoom(
     checkinDate,
-    checkOutdate,
+    checkoutdate,
     noOfBedrooms,
     noOfPeople,
     acRequired
@@ -155,6 +163,27 @@ const filterRoom = asyncHandler(async (req, res) => {
   }
 });
 
+const isBookingPossible = asyncHandler(async (req, res) => {
+  const { id, checkinDate, checkoutdate } = req.body;
+
+  if (id && checkinDate && checkoutdate) {
+    const { response, error } = await Booking.isBookingPossible(
+      id,
+      checkinDate,
+      checkoutdate
+    );
+
+    res.json({
+      response,
+    });
+  } else {
+    res.status(500);
+    throw new Error(
+      "id, checkinDate, checkoutdate, all the fields must not be null or undefined"
+    );
+  }
+});
+
 export {
   createBooking,
   getAllBooking,
@@ -162,4 +191,5 @@ export {
   confirmPayment,
   myBookings,
   filterRoom,
+  isBookingPossible,
 };

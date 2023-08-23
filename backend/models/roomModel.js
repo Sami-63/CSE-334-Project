@@ -110,6 +110,7 @@ Room.getRoomById = async (id) => {
         else {
           if (res.length)
             resolve({
+              id: res[0].id,
               title: res[0].title,
               description: res[0].description,
               price: res[0].price,
