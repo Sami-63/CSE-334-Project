@@ -41,11 +41,7 @@ const getAllBooking = asyncHandler(async (req, res) => {
   const { bookings, error } = await Booking.getAllBooking();
 
   if (!error) {
-    if (bookings.length) {
-      res.json({ length: bookings.length, bookings });
-    } else {
-      res.json({ length: 0 });
-    }
+    res.json({ bookings });
   } else {
     res.status(500);
     console.log(error);
@@ -175,6 +171,7 @@ const isBookingPossible = asyncHandler(async (req, res) => {
 
     res.json({
       response,
+      error,
     });
   } else {
     res.status(500);

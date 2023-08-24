@@ -1,104 +1,101 @@
-import React, { useState } from 'react';
-import './AddRoomForm.css';
+import { useState } from "react";
+import "./AddRoomForm.css";
+import { Alert, Button, Form } from "react-bootstrap";
+import { CreateFacility } from "../actions/facilityActions";
+import Loader from "./Loader";
 
 const AddFacilitiesForm = () => {
-  const [roomName, setRoomName] = useState('');
-  const [roomTitle, setRoomTitle] = useState('');
-  const [roomPrice, setRoomPrice] = useState('');
-  const [roomDescription, setRoomDescription] = useState('');
-  const [roomUrl, setRoomUrl] = useState('');
+  const [category, setCategory] = useState("");
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
 
-  const handleRoomNameChange = (event) => {
-    setRoomName(event.target.value);
-  };
+  const [imgUrl, setImgUrl] = useState("");
 
-  const handleRoomTitleChange = (event) => {
-    setRoomTitle(event.target.value);
-  };
+  const [msg, setmsg] = useState("");
+  const { create, isLoading, error } = CreateFacility();
 
-  const handleRoomPriceChange = (event) => {
-    setRoomPrice(event.target.value);
-  };
-
-  const handleRoomDescriptionChange = (event) => {
-    setRoomDescription(event.target.value);
-  };
-
-  const handleRoomUrlChange = (event) => {
-    setRoomUrl(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Perform form submission logic here
-    console.log('Room Name:', roomName);
-    console.log('Room Title:', roomTitle);
-    console.log('Room Price:', roomPrice);
-    console.log('Room Description:', roomDescription);
-    console.log('Room URL:', roomUrl);
+    console.log("Category:", category);
+    console.log("Title:", title);
+    console.log("Description:", description);
+    console.log("Price:", price);
+
+    console.log("Image URL:", imgUrl);
     // Reset form fields
-    setRoomName('');
-    setRoomTitle('');
-    setRoomPrice('');
-    setRoomDescription('');
-    setRoomUrl('');
+
+    const success = await create(category, title, description, price, imgUrl);
+
+    if (success) {
+      setmsg("Facility added");
+      setCategory("");
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setImgUrl("");
+    }
   };
 
   return (
-    <div className="add-room-form">
-      <h2>Add New Facility</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            id="roomName"
-            value={roomName}
-            onChange={handleRoomNameChange}
+    <div style={{ maxWidth: "60vw" }}>
+      <h2 className='text-center'>ADD FACILITY</h2>
+      <Form onSubmit={handleSubmit}>
+        <Form.Group controlId='category'>
+          <Form.Label>Category</Form.Label>
+          <Form.Control
+            type='text'
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
             required
           />
-          <label htmlFor="roomName">Room Name</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            id="roomTitle"
-            value={roomTitle}
-            onChange={handleRoomTitleChange}
+        </Form.Group>
+        <Form.Group controlId='title'>
+          <Form.Label>Title</Form.Label>
+          <Form.Control
+            type='text'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             required
           />
-          <label htmlFor="roomTitle">Room Title</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="number"
-            id="roomPrice"
-            value={roomPrice}
-            onChange={handleRoomPriceChange}
+        </Form.Group>
+        <Form.Group controlId='description'>
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            as='textarea'
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             required
           />
-          <label htmlFor="roomPrice">Room Price</label>
-        </div>
-        <div className="form-group">
-          <textarea
-            id="roomDescription"
-            value={roomDescription}
-            onChange={handleRoomDescriptionChange}
-            required
-          ></textarea>
-          <label htmlFor="roomDescription">Room Description</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            id="roomUrl"
-            value={roomUrl}
-            onChange={handleRoomUrlChange}
+        </Form.Group>
+        <Form.Group controlId='price'>
+          <Form.Label>Price</Form.Label>
+          <Form.Control
+            type='number'
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
             required
           />
-          <label htmlFor="roomUrl">Room Image URL</label>
-        </div>
-        <button type="submit">Add Room</button>
-      </form>
+        </Form.Group>
+
+        <Form.Group controlId='imgUrl'>
+          <Form.Label>Image URL</Form.Label>
+          <Form.Control
+            type='text'
+            value={imgUrl}
+            onChange={(e) => setImgUrl(e.target.value)}
+            required
+          />
+        </Form.Group>
+        {isLoading && <Loader />}
+        {error && <Alert variant='danger'>{error}</Alert>}
+        {msg && <Alert variant='success'>{msg}</Alert>}
+        <Button variant='primary' type='submit' disabled={isLoading}>
+          Add Facility
+        </Button>
+      </Form>
     </div>
   );
 };

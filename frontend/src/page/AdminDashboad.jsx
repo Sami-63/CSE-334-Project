@@ -1,22 +1,20 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
-import './AdminDashboard.css';
-import AddRoomForm from '../conponents/AddRoomForm';
-import AddFacilitiesForm from '../conponents/AddFacilitiesForm';
-import ViewBookingsForm from '../conponents/ViewBookingsForm';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import AddRoomForm from "../conponents/AddRoomForm";
+import AddFacilitiesForm from "../conponents/AddFacilitiesForm";
+import ViewBookingsForm from "../conponents/ViewBookingsForm";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const AdminDashboard = () => {
   const [activeTab, setActiveTab] = useState(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
-
-  const handleToggleSidebar = () => {
-    setSidebarCollapsed((prevCollapsed) => !prevCollapsed);
-  };
+  useEffect(() => {
+    if (!user) navigate("/");
+    else if (user.userType !== "admin") navigate("/");
+  }, [user]);
 
   const renderForm = () => {
     if (activeTab === null) {
@@ -24,11 +22,11 @@ const AdminDashboard = () => {
     }
 
     switch (activeTab) {
-      case 'addRoom':
+      case "addRoom":
         return <AddRoomForm />;
-      case 'addFacilities':
+      case "addFacilities":
         return <AddFacilitiesForm />;
-      case 'viewBookings':
+      case "viewBookings":
         return <ViewBookingsForm />;
       default:
         return null;
@@ -36,39 +34,41 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className={`admin-dashboard ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-      <div className="sidebar">
-        <div className="sidebar-toggle" onClick={handleToggleSidebar}>
-          <FontAwesomeIcon
-            icon={sidebarCollapsed ? faAngleDoubleLeft : faAngleDoubleRight}
-            className="sidebar-toggle-icon"
-          />
-        </div>
-        <div className="sidebar-menu">
-          <div
-            className={`sidebar-menu-item ${activeTab === 'addRoom' ? 'active' : ''}`}
-            onClick={() => handleTabClick('addRoom')}
+    <Container>
+      <h1 className='text-center mt-4'>Admin Dashboard</h1>
+      <Row className='mt-4'>
+        <Col md={4} className='text-center'>
+          <Button
+            variant='primary'
+            className='w-100'
+            onClick={() => setActiveTab("addRoom")}
           >
             Add Room
-          </div>
-          <div
-            className={`sidebar-menu-item ${activeTab === 'addFacilities' ? 'active' : ''}`}
-            onClick={() => handleTabClick('addFacilities')}
+          </Button>
+        </Col>
+        <Col md={4} className='text-center'>
+          <Button
+            variant='primary'
+            className='w-100'
+            onClick={() => setActiveTab("addFacilities")}
           >
-            Add Facilities
-          </div>
-          <div
-            className={`sidebar-menu-item ${activeTab === 'viewBookings' ? 'active' : ''}`}
-            onClick={() => handleTabClick('viewBookings')}
+            Add Facility
+          </Button>
+        </Col>
+        <Col md={4} className='text-center'>
+          <Button
+            variant='primary'
+            className='w-100'
+            onClick={() => setActiveTab("viewBookings")}
           >
             View Bookings
-          </div>
-        </div>
-      </div>
-      <div className="main-content">
-        <div className="content">{renderForm()}</div>
-      </div>
-    </div>
+          </Button>
+        </Col>
+      </Row>
+      <Row className='mt-4 justify-content-center'>
+        <Col md={activeTab === "viewBookings" ? 12 : 4}>{renderForm()}</Col>
+      </Row>
+    </Container>
   );
 };
 

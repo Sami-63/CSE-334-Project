@@ -1,59 +1,60 @@
 import { useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 
-const MakeBooking = () => {
+const CreateFacility = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
-
   const { user } = useAuthContext();
 
-  const bookNow = async (checkInDate, checkOutDate, id, calculatedPrice) => {
+  const create = async (category, title, description, price, imgUrl) => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:4000/api/bookings/create", {
+    const response = await fetch("http://localhost:4000/api/facility/create", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`,
       },
       body: JSON.stringify({
-        startDate: checkInDate,
-        endDate: checkOutDate,
-        roomId: id,
-        paymentAmount: calculatedPrice,
+        category,
+        title,
+        description,
+        price,
+        imgUrl,
       }),
     });
+
     const json = await response.json();
 
     if (!response.ok) {
       setIsLoading(false);
       setError(json.error);
       console.log("error = ", error);
-      return null;
+      return false;
     }
 
     if (response.ok) {
       console.log("json -> ", json);
       setIsLoading(false);
-      return json;
+      return true;
     }
   };
 
-  return { bookNow, isLoading, error };
+  return { create, isLoading, error };
 };
 
-const GetAllBookings = () => {
+const GetAllFacilityBookings = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
   const { user } = useAuthContext();
 
-  const getRoomBookings = async () => {
+  const getBookings = async () => {
     setIsLoading(true);
     setError(null);
 
-    const response = await fetch("http://localhost:4000/api/bookings/", {
+    const response = await fetch("http://localhost:4000/api/other-bookings", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -72,11 +73,11 @@ const GetAllBookings = () => {
     if (response.ok) {
       console.log("json -> ", json);
       setIsLoading(false);
-      return json.bookings;
+      return json;
     }
   };
 
-  return { getRoomBookings, isLoading, error };
+  return { getBookings, isLoading, error };
 };
 
-export { MakeBooking, GetAllBookings };
+export { CreateFacility, GetAllFacilityBookings };

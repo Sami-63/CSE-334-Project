@@ -1,8 +1,13 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars, faAngleDoubleLeft, faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons';
-import './UserDashboard.css';
-import MyBookings from '../conponents/MyBookings';
+import React, { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBars,
+  faAngleDoubleLeft,
+  faAngleDoubleRight,
+} from "@fortawesome/free-solid-svg-icons";
+import "./UserDashboard.css";
+import MyBookings from "../conponents/MyBookings";
+import Profile from "./Profile";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState(null);
@@ -22,8 +27,10 @@ const UserDashboard = () => {
     }
 
     switch (activeTab) {
-      case 'myBookings':
+      case "myBookings":
         return <MyBookings />;
+      case "profile":
+        return <Profile />;
       // Add other cases for other tabs
       default:
         return null;
@@ -31,26 +38,41 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className={`user-dashboard ${sidebarCollapsed ? 'sidebar-collapsed' : ''}`}>
-      <div className="sidebar">
-        <div className="sidebar-toggle" onClick={handleToggleSidebar}>
+    <div
+      className={`user-dashboard ${
+        sidebarCollapsed ? "sidebar-collapsed" : ""
+      }`}
+    >
+      <div className='sidebar'>
+        <div className='sidebar-toggle' onClick={handleToggleSidebar}>
           <FontAwesomeIcon
             icon={sidebarCollapsed ? faAngleDoubleLeft : faAngleDoubleRight}
-            className="sidebar-toggle-icon"
+            className='sidebar-toggle-icon'
           />
         </div>
-        <div className="sidebar-menu">
+        <div className='sidebar-menu'>
           <div
-            className={`sidebar-menu-item ${activeTab === 'myBookings' ? 'active' : ''}`}
-            onClick={() => handleTabClick('myBookings')}
+            className={`sidebar-menu-item ${
+              activeTab === "profile" ? "active" : ""
+            }`}
+            onClick={() => handleTabClick("profile")}
+          >
+            Profile
+          </div>
+          <div
+            className={`sidebar-menu-item ${
+              activeTab === "myBookings" ? "active" : ""
+            }`}
+            onClick={() => handleTabClick("myBookings")}
           >
             My Bookings
           </div>
+
           {/* Add other sidebar menu items here */}
         </div>
       </div>
-      <div className="main-content">
-        <div className="content">{renderContent()}</div>
+      <div className='main-content'>
+        <div className='content'>{renderContent()}</div>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faStar } from '@fortawesome/free-solid-svg-icons';
-import './MyBookings.css';
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import "./MyBookings.css";
 
 const MyBookings = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -30,7 +30,7 @@ const MyBookings = () => {
   };
 
   return (
-    <div className="my-bookings">
+    <div className='my-bookings'>
       <h2>My Bookings</h2>
       <table>
         <thead>
@@ -62,14 +62,16 @@ const MyBookings = () => {
       </table>
 
       {showPopup && (
-        <div className="popup">
-          <div className="popup-content">
+        <div className='popup'>
+          <div className='popup-content'>
             <h3>Rate the Room</h3>
-            <div className="rating-stars">
+            <div className='rating-stars'>
               {[1, 2, 3, 4, 5].map((star) => (
                 <FontAwesomeIcon
                   key={star}
-                  className={`star-icon ${star <= rating ? 'star-selected' : ''}`}
+                  className={`star-icon ${
+                    star <= rating ? "star-selected" : ""
+                  }`}
                   icon={faStar}
                   onClick={() => handleRatingClick(star)}
                 />

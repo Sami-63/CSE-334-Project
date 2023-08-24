@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
 
 const GetAllRooms = () => {
   const [error, setError] = useState(null);
@@ -160,4 +161,57 @@ const CheckBooking = () => {
   return { checkBooking, isLoading, error };
 };
 
-export { GetAllRooms, GetRoom, FilterRooms, CheckBooking };
+const CreateRoom = () => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+  const { user } = useAuthContext();
+
+  const create = async (
+    title,
+    description,
+    price,
+    personCount,
+    bedroomCount,
+    acCount,
+    imgUrl
+  ) => {
+    setIsLoading(true);
+    setError(null);
+
+    const response = await fetch("http://localhost:4000/api/rooms/create", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${user.token}`,
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        price,
+        personCount,
+        bedroomCount,
+        acCount,
+        imgUrl,
+      }),
+    });
+
+    const json = await response.json();
+
+    if (!response.ok) {
+      setIsLoading(false);
+      setError(json.error);
+      console.log("error = ", error);
+      return false;
+    }
+
+    if (response.ok) {
+      console.log("json -> ", json);
+      setIsLoading(false);
+      return true;
+    }
+  };
+
+  return { create, isLoading, error };
+};
+
+export { GetAllRooms, GetRoom, FilterRooms, CheckBooking, CreateRoom };
