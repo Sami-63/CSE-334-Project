@@ -1,4 +1,3 @@
-import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { LinkContainer } from "react-router-bootstrap";

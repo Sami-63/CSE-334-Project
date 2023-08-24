@@ -12,9 +12,10 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log("user -> ", user);
     if (!user) navigate("/");
     else if (user.userType !== "admin") navigate("/");
-  }, [user]);
+  }, [navigate, user]);
 
   const renderForm = () => {
     if (activeTab === null) {

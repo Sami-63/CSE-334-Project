@@ -1,10 +1,8 @@
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-// eslint-disable-next-line no-unused-vars
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormContainer from "../conponents/FormContainer";
 import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
-
 import useSignup from "../hooks/useSignup";
 
 const RegisterPage = () => {
@@ -12,6 +10,11 @@ const RegisterPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [nidNumber, setNidNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [bkashNumber, setBkashNumber] = useState("");
   const [formError, setFormError] = useState("");
 
   const { signup, isLoading, error } = useSignup();
@@ -20,14 +23,21 @@ const RegisterPage = () => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      setFormError("password doesn't match");
+      setFormError("Password doesn't match");
+    } else if (password.length < 8) {
+      setFormError("Password should be at least 8 characters long");
     } else {
-      if (password.length < 8)
-        setFormError("password should be at least 8 character long");
-      else {
-        setFormError("");
-        await signup(name, email, password);
-      }
+      setFormError("");
+      await signup(
+        name,
+        email,
+        password,
+        nidNumber,
+        phoneNumber,
+        bankName,
+        accountNumber,
+        bkashNumber
+      );
     }
   };
 
@@ -87,6 +97,61 @@ const RegisterPage = () => {
             placeholder='Confirm your password'
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='nidNumber'>
+          <Form.Label>NID Number</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Enter NID number'
+            value={nidNumber}
+            onChange={(e) => setNidNumber(e.target.value)}
+            required
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='phoneNumber'>
+          <Form.Label>Phone Number</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Enter phone number'
+            value={phoneNumber}
+            onChange={(e) => setPhoneNumber(e.target.value)}
+            required
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='bankName'>
+          <Form.Label>Bank Name</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Enter bank name'
+            value={bankName}
+            onChange={(e) => setBankName(e.target.value)}
+            required
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='accountNumber'>
+          <Form.Label>Account Number</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Enter account number'
+            value={accountNumber}
+            onChange={(e) => setAccountNumber(e.target.value)}
+            required
+          ></Form.Control>
+        </Form.Group>
+
+        <Form.Group controlId='bkashNumber'>
+          <Form.Label>Bkash Number</Form.Label>
+          <Form.Control
+            type='text'
+            placeholder='Enter Bkash number'
+            value={bkashNumber}
+            onChange={(e) => setBkashNumber(e.target.value)}
             required
           ></Form.Control>
         </Form.Group>

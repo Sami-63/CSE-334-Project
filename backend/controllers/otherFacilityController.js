@@ -21,14 +21,64 @@ const createFacility = asyncHandler(async (req, res) => {
 });
 
 const getAllFacility = asyncHandler(async (req, res) => {
-  const { facilities, error } = await OtherFacility.getAllFacility();
+  const { category, error } = await OtherFacility.getCategory();
+
+  // console.log("category, error => ", category, error);
+
+  const allFacility = {}; // Use an object to store facility data by category
+
+  if (category) {
+    // Use Promise.all to await all async operations
+    await Promise.all(
+      category.map(async (categoryObject) => {
+        try {
+          const facilityData = await OtherFacility.getCategoryWiseFacility(
+            categoryObject.category
+          );
+
+          // console.log("facility data -> ", facilityData);
+
+          if (!allFacility[categoryObject.category]) {
+            allFacility[categoryObject.category] = []; // Initialize the array for the category
+          }
+
+          allFacility[categoryObject.category].push(...facilityData.facilities); // Spread the facility objects into the array
+        } catch (error) {
+          console.error(
+            `Error fetching facility data for category ${categoryObject.category}:`,
+            error
+          );
+        }
+      })
+    );
+  }
 
   if (!error) {
-    res.json(facilities);
+    res.json(allFacility);
   } else {
     res.status(500);
-    throw new Error("Error while getching all facilities");
+    throw new Error("Error while fetching all facilities");
   }
 });
 
-export { createFacility, getAllFacility };
+const getFacilityById = asyncHandler(async (req, res) => {
+  const id = req.params.id;
+
+  // console.log("id => ", id);
+
+  if (id) {
+    const { facility, error } = await OtherFacility.getFacilityById(id);
+    // console.log("facility, error -> ", facility, error);
+    if (error) {
+      res.status(500);
+      console.log(error);
+    } else {
+      res.json(facility);
+    }
+  } else {
+    res.status(500);
+    throw new Error("Cant get faclity without id.");
+  }
+});
+
+export { createFacility, getAllFacility, getFacilityById };

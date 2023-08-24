@@ -2,7 +2,7 @@ import { useState } from "react";
 import "./AddRoomForm.css";
 import { CreateRoom } from "../actions/roomActions";
 
-import { Form, Button, Alert } from "react-bootstrap";
+import { Form, Button, Alert, Row } from "react-bootstrap";
 import Loader from "./Loader";
 
 const AddRoomForm = () => {
@@ -50,7 +50,7 @@ const AddRoomForm = () => {
   };
 
   return (
-    <div style={{ maxWidth: "60vw" }}>
+    <Row className='justify-content-center'>
       <Form onSubmit={handleSubmit}>
         <h2 className='text-center'>ADD ROOM</h2>
         <Form.Group controlId='title'>
@@ -129,7 +129,7 @@ const AddRoomForm = () => {
           Add Room
         </Button>
       </Form>
-    </div>
+    </Row>
   );
 };
 

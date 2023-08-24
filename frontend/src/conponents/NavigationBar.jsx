@@ -1,4 +1,3 @@
-import React from "react";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAuthContext } from "../hooks/useAuthContext";
@@ -6,13 +5,17 @@ import { RiHome2Line, RiUserLine } from "react-icons/ri";
 import { FaSignOutAlt } from "react-icons/fa";
 import useLogout from "../hooks/useLogout";
 import "./NavigationBar.css";
+import { useNavigate } from "react-router-dom";
 
 const NavigationBar = () => {
   const { user } = useAuthContext();
   const { logout } = useLogout();
 
+  const navigate = useNavigate();
+
   const logoutHandler = async () => {
     await logout();
+    navigate("/");
   };
 
   return (
@@ -42,7 +45,7 @@ const NavigationBar = () => {
                       </LinkContainer>
                     </>
                   ) : (
-                    <LinkContainer to='/userdashboard'>
+                    <LinkContainer to='/dashboard'>
                       <Nav.Link>
                         <RiUserLine className='user-icon' />
                         {user.name}

@@ -33,9 +33,32 @@ const makeJson = (user) => {
   };
 };
 
-User.create = async (name, email, password) => {
+User.create = async (
+  name,
+  email,
+  password,
+  nidNumber,
+  phoneNumber,
+  bankName,
+  accountNumber,
+  bkashNumber
+) => {
   try {
-    const user = new User({ name, email, password });
+    console.log("name -> ", name);
+    console.log("email -> ", email);
+    console.log("password -> ", password);
+    console.log("nidNumber -> ", nidNumber);
+    console.log("phoneNumber -> ", phoneNumber);
+    console.log("bankName -> ", bankName);
+    console.log("accountNumber -> ", accountNumber);
+    console.log("bkashNumber -> ", bkashNumber);
+
+    const user = new User({
+      name,
+      email,
+      password,
+    });
+    console.log("[model] user -> ", user);
     const salt = await bcrypt.genSalt(10);
     user.password = await bcrypt.hash(user.password, salt);
 

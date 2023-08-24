@@ -110,20 +110,21 @@ OtherBooking.givenRating = async (id, rating) => {
 
 OtherBooking.getBookingsByEmail = async (email) => {
   try {
-    const otherbooking = await new Promise((resolve, reject) => {
+    const otherbookings = await new Promise((resolve, reject) => {
       conn.query(
         "SELECT * FROM otherbooking WHERE customerEmail = ?",
         [email],
         (err, res) => {
           if (err) reject(err);
           else {
-            resolve(res);
+            if (res.length) resolve(res);
+            else resolve([]);
           }
         }
       );
     });
-
-    return { otherbooking };
+    console.log("[model] otherbookings => ", otherbookings);
+    return { otherbookings };
   } catch (error) {
     return { error };
   }

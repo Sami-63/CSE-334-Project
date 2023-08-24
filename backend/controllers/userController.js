@@ -3,7 +3,16 @@ import User from "../models/userModel.js";
 import generateToken from "../utils/generateToken.js";
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const {
+    name,
+    email,
+    password,
+    nidNumber,
+    phoneNumber,
+    bankName,
+    accountNumber,
+    bkashNumber,
+  } = req.body;
   console.log("register email e asi");
 
   const userExist = await User.findUserByEmail(email);
@@ -15,7 +24,16 @@ const registerUser = asyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
-  const { data, error } = await User.create(name, email, password);
+  const { data, error } = await User.create(
+    name,
+    email,
+    password,
+    nidNumber,
+    phoneNumber,
+    bankName,
+    accountNumber,
+    bkashNumber
+  );
 
   console.log("in controller = data -> ", data);
   console.log("in controller = error -> ", error);

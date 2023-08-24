@@ -6,14 +6,40 @@ const useSignup = () => {
   const [isLoading, setIsLoading] = useState(null);
   const { dispatch } = useAuthContext();
 
-  const signup = async (name, email, password) => {
+  const signup = async (
+    name,
+    email,
+    password,
+    nidNumber,
+    phoneNumber,
+    bankName,
+    accountNumber,
+    bkashNumber
+  ) => {
+    console.log("[signup] name -> ", name);
+    console.log("[signup] email -> ", email);
+    console.log("[signup] password -> ", password);
+    console.log("[signup] nidNumber -> ", nidNumber);
+    console.log("[signup] phoneNumber -> ", phoneNumber);
+    console.log("[signup] bankName -> ", bankName);
+    console.log("[signup] accountNumber -> ", accountNumber);
+    console.log("[signup] bkashNumber -> ", bkashNumber);
     setIsLoading(true);
     setError(null);
 
     const response = await fetch("http://localhost:4000/api/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        nidNumber,
+        phoneNumber,
+        bankName,
+        accountNumber,
+        bkashNumber,
+      }),
     });
     console.log("response => ", response);
     const json = await response.json();

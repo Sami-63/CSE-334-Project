@@ -1,80 +1,108 @@
-import React, { useState } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faBars,
-  faAngleDoubleLeft,
-  faAngleDoubleRight,
-} from "@fortawesome/free-solid-svg-icons";
-import "./UserDashboard.css";
+import { useEffect, useState } from "react";
+import { useAuthContext } from "../hooks/useAuthContext";
+import { useNavigate } from "react-router-dom";
 import MyBookings from "../conponents/MyBookings";
 import Profile from "./Profile";
+import { Button, Col, Container, Row } from "react-bootstrap";
+import "./UserDashboard.css"; // Import your CSS file for custom styling
+import AddRoomForm from "../conponents/AddRoomForm";
+import AddFacilitiesForm from "../conponents/AddFacilitiesForm";
+import ViewBookingsForm from "../conponents/ViewBookingsForm";
 
 const UserDashboard = () => {
-  const [activeTab, setActiveTab] = useState(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
 
-  const handleTabClick = (tab) => {
-    setActiveTab(tab);
-  };
+  const { user } = useAuthContext();
+  const navigate = useNavigate();
 
-  const handleToggleSidebar = () => {
-    setSidebarCollapsed((prevCollapsed) => !prevCollapsed);
-  };
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
 
   const renderContent = () => {
-    if (activeTab === null) {
-      return null; // No tab selected
-    }
-
     switch (activeTab) {
       case "myBookings":
         return <MyBookings />;
       case "profile":
         return <Profile />;
-      // Add other cases for other tabs
+      case "addroom":
+        return <AddRoomForm />;
+      case "addfacility":
+        return <AddFacilitiesForm />;
+      case "getallbookings":
+        return <ViewBookingsForm />;
       default:
         return null;
     }
   };
 
   return (
-    <div
-      className={`user-dashboard ${
-        sidebarCollapsed ? "sidebar-collapsed" : ""
-      }`}
-    >
-      <div className='sidebar'>
-        <div className='sidebar-toggle' onClick={handleToggleSidebar}>
-          <FontAwesomeIcon
-            icon={sidebarCollapsed ? faAngleDoubleLeft : faAngleDoubleRight}
-            className='sidebar-toggle-icon'
-          />
-        </div>
-        <div className='sidebar-menu'>
-          <div
-            className={`sidebar-menu-item ${
-              activeTab === "profile" ? "active" : ""
-            }`}
-            onClick={() => handleTabClick("profile")}
-          >
-            Profile
-          </div>
-          <div
-            className={`sidebar-menu-item ${
-              activeTab === "myBookings" ? "active" : ""
-            }`}
-            onClick={() => handleTabClick("myBookings")}
+    <Container className='user-dashboard-container'>
+      <h1 className='text-center mt-4'>Dashboard</h1>
+      <Row className='mt-4'>
+        <Col
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Button
+            variant='primary'
+            className='dashboard-button mx-4'
+            onClick={() => setActiveTab("myBookings")}
           >
             My Bookings
-          </div>
+          </Button>
+          <Button
+            variant='primary'
+            className='dashboard-button mx-4'
+            onClick={() => setActiveTab("profile")}
+          >
+            Manage Profile
+          </Button>
 
-          {/* Add other sidebar menu items here */}
-        </div>
-      </div>
-      <div className='main-content'>
-        <div className='content'>{renderContent()}</div>
-      </div>
-    </div>
+          {user && user.userType === "admin" ? (
+            <>
+              <Button
+                variant='primary'
+                className='dashboard-button mx-4'
+                onClick={() => setActiveTab("addroom")}
+              >
+                Add Room
+              </Button>
+
+              <Button
+                variant='primary'
+                className='dashboard-button mx-4'
+                onClick={() => setActiveTab("addfacility")}
+              >
+                Add Facility
+              </Button>
+
+              <Button
+                variant='primary'
+                className='dashboard-button mx-4'
+                onClick={() => setActiveTab("getallbookings")}
+              >
+                All Bookings
+              </Button>
+            </>
+          ) : (
+            <></>
+          )}
+        </Col>
+      </Row>
+      <Row className='mt-4 justify-content-center'>
+        <Col
+          md={activeTab === "addroom" || activeTab === "addfacility" ? 6 : 12}
+        >
+          {renderContent()}
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

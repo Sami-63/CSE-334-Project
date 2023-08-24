@@ -79,8 +79,10 @@ const myOtherBookings = asyncHandler(async (req, res) => {
 
   const { otherbookings, error } = await OtherBooking.getBookingsByEmail(email);
 
+  console.log("otherbookings, error => ", otherbookings, error);
+
   if (!error) {
-    res.json(bookings);
+    res.json(otherbookings);
   } else {
     res.status(500);
     console.log(error);

@@ -1,11 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import "./MyBookings.css";
+import { GetMyBooking } from "../actions/bookingActions";
+import { GetMyFacilityBookings } from "../actions/facilityActions";
+import { Alert, Container, Table } from "react-bootstrap";
+import Loader from "./Loader";
 
 const MyBookings = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [rating, setRating] = useState(0);
+
+  const {
+    getmyBooking,
+    isLoading: roomLoading,
+    error: roomError,
+  } = GetMyBooking();
+  const {
+    getmyFacilityBooking,
+    isLoading: facilityLoading,
+    error: facilityError,
+  } = GetMyFacilityBookings();
+
+  const [roomBookings, setRoomBookings] = useState([]);
+  const [facilityBookings, setFacilityBBookings] = useState([]);
+
+  useEffect(() => {
+    const fetchdata = async () => {
+      try {
+        const response = await getmyBooking();
+        setRoomBookings(response);
+      } catch (error) {
+        console.log(error);
+      }
+
+      try {
+        const response = await getmyFacilityBooking();
+        setFacilityBBookings(response);
+      } catch (error) {
+        console.log("facility error ", error);
+      }
+
+      console.log("roomBookings => ", roomBookings);
+      console.log("facilityBookings => ", facilityBookings);
+    };
+
+    fetchdata();
+  }, []);
 
   const openPopup = () => {
     setShowPopup(true);
@@ -31,35 +71,68 @@ const MyBookings = () => {
 
   return (
     <div className='my-bookings'>
-      <h2>My Bookings</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Booking ID</th>
-            <th>Room</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Room A</td>
-            <td>2023-08-25</td>
-            <td>
-              <button onClick={openPopup}>Rate</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Room B</td>
-            <td>2023-08-26</td>
-            <td>
-              <button onClick={openPopup}>Rate</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <Container>
+        <h1 className='text-center mt-4'>Room Bookings</h1>
+        {roomLoading && <Loader />}
+        {roomError && <Alert>{roomError}</Alert>}
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+
+              <th>Room ID</th>
+              <th>Payment Amount</th>
+              <th>Given Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {roomBookings?.map((booking) => (
+              <tr key={booking.id}>
+                <td>{booking.id}</td>
+                <td>{booking.startDate}</td>
+                <td>{booking.endDate}</td>
+                <td>{booking.roomId}</td>
+                <td>{booking.paymentAmount}</td>
+                <td>{booking.givenRating}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Container>
+
+      <Container style={{ marginTop: "100px" }}>
+        <h1 className='text-center mt-4'>Other Facility Bookings</h1>
+        {facilityLoading && <Loader />}
+        {facilityError && <Alert>{facilityError}</Alert>}
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>Customer Email</th>
+              <th>Room ID</th>
+              <th>Payment Amount</th>
+              <th>Given Rating</th>
+            </tr>
+          </thead>
+          <tbody>
+            {facilityBookings?.map((booking) => (
+              <tr key={booking.id}>
+                <td>{booking.id}</td>
+                <td>{booking.startDate}</td>
+                <td>{booking.endDate}</td>
+                <td>{booking.customerEmail}</td>
+                <td>{booking.roomId}</td>
+                <td>{booking.paymentAmount}</td>
+                <td>{booking.givenRating}</td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </Container>
 
       {showPopup && (
         <div className='popup'>

@@ -1,5 +1,5 @@
 import { Container } from "react-bootstrap";
-import "./ViewBookings.css";
+
 import BookingsTable from "./BookingTable";
 
 const ViewBookingsForm = () => {

@@ -1,22 +1,25 @@
 import { Button, Card, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-const RoomCard = ({ room }) => {
+const FacilityCard = ({ facility }) => {
   return (
-    <Col md={4} key={room.id} style={{ marginBottom: "40px" }}>
+    <Col md={4} key={facility.id} style={{ marginBottom: "40px" }}>
       <Card style={{ height: "100%" }}>
         <Card.Img
           variant='top'
-          src={room.imgUrl}
+          src={facility.imgUrl}
           style={{ objectFit: "cover", height: "200px" }} // Adjust the height as needed
         />
         <Card.Body style={{ display: "flex", flexDirection: "column" }}>
-          <Card.Title>{room.title}</Card.Title>
+          <Card.Title>{facility.title}</Card.Title>
           <Card.Text style={{ flex: "1", overflow: "hidden" }}>
-            {room.description}
+            {facility.description}
           </Card.Text>
           <div className='mt-auto'>
-            <Link to={`/room/${room.id}`} style={{ textDecoration: "none" }}>
+            <Link
+              to={`/facility/${facility.id}`}
+              style={{ textDecoration: "none" }}
+            >
               <Button variant='primary' block>
                 View Details
               </Button>
@@ -28,4 +31,4 @@ const RoomCard = ({ room }) => {
   );
 };
 
-export default RoomCard;
+export default FacilityCard;

@@ -15,6 +15,7 @@ import RoomList from "./page/RoomList";
 import Room from "./page/Room";
 import AdminDashboad from "./page/AdminDashboad";
 import UserDashboard from "./page/UserDashboard";
+import FacilityPage from "./page/FacilityPage";
 
 function App() {
   return (
@@ -24,11 +25,11 @@ function App() {
         <main className='py-3'>
           <Container>
             <Routes>
+              <Route path='/facility/:id' element={<FacilityPage />} />
               <Route path='/room/:id' element={<Room />} />
               <Route path='/roomlist' element={<RoomList />} />
-              <Route path='/dashboard' element={<AdminDashboad />} />
-              <Route path='/userdashboard' element={<UserDashboard />} />
-              <Route path='/profile' element={<Profile />} />
+              <Route path='/admin-dashboard' element={<AdminDashboad />} />
+              <Route path='/dashboard' element={<UserDashboard />} />
               <Route path='/register' element={<RegisterPage />} />
               <Route path='/login' element={<LoginPage />} />
               <Route exact path='/' element={<Home />} />
