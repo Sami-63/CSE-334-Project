@@ -6,7 +6,6 @@ const createRoom = asyncHandler(async (req, res) => {
     title,
     description,
     price,
-    rating,
     personCount,
     bedroomCount,
     acCount,
@@ -17,7 +16,6 @@ const createRoom = asyncHandler(async (req, res) => {
     title,
     description,
     price,
-    rating,
     personCount,
     bedroomCount,
     acCount,
@@ -35,7 +33,7 @@ const createRoom = asyncHandler(async (req, res) => {
 const getAllRooms = asyncHandler(async (req, res) => {
   const { rooms, error } = await Room.getAllRooms();
   if (!error) {
-    console.log(rooms);
+    // console.log(rooms);
 
     res.json(rooms);
   } else {

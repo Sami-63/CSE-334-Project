@@ -48,4 +48,19 @@ OtherFacility.create = async (facility) => {
   }
 };
 
+OtherFacility.getAllFacility = async () => {
+  try {
+    const facilities = await new Promise((resolve, reject) => {
+      conn.query("SELECT * FROM otherFacility", (err, res) => {
+        if (err) reject(err);
+        else resolve(res);
+      });
+    });
+
+    return { facilities };
+  } catch (error) {
+    return { error };
+  }
+};
+
 export default OtherFacility;

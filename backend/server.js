@@ -7,6 +7,7 @@ import userRoutes from "./routes/userRoutes.js";
 import roomRoutes from "./routes/roomRoutes.js";
 import bookingRoutes from "./routes/bookingRoutes.js";
 import otherFacilityRoutes from "./routes/otherFacilityRoutes.js";
+import otherBookingRoutes from "./routes/otherBooking.js";
 
 import morgan from "morgan";
 
@@ -29,6 +30,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/rooms", roomRoutes);
 app.use("/api/bookings", bookingRoutes);
 app.use("/api/facility", otherFacilityRoutes);
+app.use("/api/other-bookings", otherBookingRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

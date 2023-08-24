@@ -6,7 +6,6 @@ const createFacility = asyncHandler(async (req, res) => {
     category: req.body.category,
     title: req.body.title,
     description: req.body.description,
-    price: req.body.price,
     rating: req.body.rating,
     imgUrl: req.body.imgUrl,
   });
@@ -21,4 +20,15 @@ const createFacility = asyncHandler(async (req, res) => {
   }
 });
 
-export { createFacility };
+const getAllFacility = asyncHandler(async (req, res) => {
+  const { facilities, error } = await OtherFacility.getAllFacility();
+
+  if (!error) {
+    res.json(facilities);
+  } else {
+    res.status(500);
+    throw new Error("Error while getching all facilities");
+  }
+});
+
+export { createFacility, getAllFacility };
