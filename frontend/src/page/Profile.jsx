@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useNavigate } from "react-router-dom";
 import { Col, Row, Alert, Button, Form, Container } from "react-bootstrap";
 import { GetProfile, UpdateProfile } from "../actions/userActions";
+import "./Profile.css"; // Import the CSS file
 
 const Profile = () => {
   const { user } = useAuthContext();
@@ -24,11 +25,12 @@ const Profile = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      if (!user) {
-        navigate("/");
-      } else {
-        try {
-          const response = await getProfileInfo();
+      console.log("profile e asi, user => ", user);
+      try {
+        const response = await getProfileInfo();
+
+        if (!response) navigate("/");
+        else {
           setName(response.name);
           setEmail(response.email);
           setUserType(response.userType);
@@ -37,10 +39,11 @@ const Profile = () => {
           setBankName(response.bankName);
           setAccountNumber(response.accountNumber);
           setBkashNumber(response.bkashNumber);
-        } catch (error) {
-          console.error("Error fetching profile info:", error);
         }
+      } catch (error) {
+        console.error("Error fetching profile info:", error);
       }
+      // }
     };
 
     fetchData();
@@ -72,20 +75,20 @@ const Profile = () => {
         {error && <Alert variant='danger'>{error}</Alert>}
         {formMessage && <Alert variant='success'>{formMessage}</Alert>}
         <Container className='my-4'>
-          <Form>
-            <Form.Group controlId='name'>
+          <Form className='profile-form'>
+            <Form.Group controlId='name' className='form-group'>
               <Form.Label>Name</Form.Label>
               <Form.Control type='text' value={name} readOnly />
             </Form.Group>
-            <Form.Group controlId='email'>
+            <Form.Group controlId='email' className='form-group'>
               <Form.Label>Email</Form.Label>
               <Form.Control type='email' value={email} readOnly />
             </Form.Group>
-            <Form.Group controlId='userType'>
+            <Form.Group controlId='userType' className='form-group'>
               <Form.Label>User Type</Form.Label>
               <Form.Control type='text' value={userType} readOnly />
             </Form.Group>
-            <Form.Group controlId='nidNumber'>
+            <Form.Group controlId='nidNumber' className='form-group'>
               <Form.Label>NID Number</Form.Label>
               <Form.Control
                 type='text'
@@ -93,7 +96,7 @@ const Profile = () => {
                 onChange={(e) => setNidNumber(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId='phoneNumber'>
+            <Form.Group controlId='phoneNumber' className='form-group'>
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
                 type='text'
@@ -101,7 +104,7 @@ const Profile = () => {
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId='bankName'>
+            <Form.Group controlId='bankName' className='form-group'>
               <Form.Label>Bank Name</Form.Label>
               <Form.Control
                 type='text'
@@ -109,7 +112,7 @@ const Profile = () => {
                 onChange={(e) => setBankName(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId='accountNumber'>
+            <Form.Group controlId='accountNumber' className='form-group'>
               <Form.Label>Account Number</Form.Label>
               <Form.Control
                 type='text'
@@ -117,7 +120,7 @@ const Profile = () => {
                 onChange={(e) => setAccountNumber(e.target.value)}
               />
             </Form.Group>
-            <Form.Group controlId='bkashNumber'>
+            <Form.Group controlId='bkashNumber' className='form-group'>
               <Form.Label>Bkash Number</Form.Label>
               <Form.Control
                 type='text'
@@ -125,10 +128,12 @@ const Profile = () => {
                 onChange={(e) => setBkashNumber(e.target.value)}
               />
             </Form.Group>
+
             <Button
               variant='primary'
               disabled={updating}
               onClick={handleUpdate}
+              style={{ fontSize: "15px" }}
             >
               {updating ? "Updating..." : "Update Profile"}
             </Button>

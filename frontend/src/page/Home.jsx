@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Loader from "../conponents/Loader";
 import RoomCard from "../conponents/RoomCard";
 import { useAuthContext } from "../hooks/useAuthContext";
+import Description from "../conponents/Description";
 
 function Home() {
   const { getRooms, isLoading, error } = GetAllRooms();
@@ -29,21 +30,7 @@ function Home() {
 
   return (
     <>
-      <div className='home'>
-        <Container>
-          <Row className='justify-content-center align-items-center'>
-            <Col md={6} className='text-center'>
-              <h1>Welcome to Our Website</h1>
-              <p>Discover Amazing Rooms for Your Stay</p>
-              {!user && (
-                <Link to='/register'>
-                  <Button variant='primary'>Get Started</Button>
-                </Link>
-              )}
-            </Col>
-          </Row>
-        </Container>
-      </div>
+      <Description />
       <Container className='m-5'>
         <Row>
           <h2 className='text-center mb-4'>Our Rooms</h2>

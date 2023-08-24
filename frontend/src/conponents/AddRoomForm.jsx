@@ -1,104 +1,134 @@
-import React, { useState } from 'react';
-import './AddRoomForm.css';
+import { useState } from "react";
+import "./AddRoomForm.css";
+import { CreateRoom } from "../actions/roomActions";
+
+import { Form, Button, Alert } from "react-bootstrap";
+import Loader from "./Loader";
 
 const AddRoomForm = () => {
-  const [roomName, setRoomName] = useState('');
-  const [roomTitle, setRoomTitle] = useState('');
-  const [roomPrice, setRoomPrice] = useState('');
-  const [roomDescription, setRoomDescription] = useState('');
-  const [roomUrl, setRoomUrl] = useState('');
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [personCount, setPersonCount] = useState("");
+  const [bedroomCount, setBedroomCount] = useState("");
+  const [acCount, setAcCount] = useState("");
+  const [imgUrl, setImgUrl] = useState("");
 
-  const handleRoomNameChange = (event) => {
-    setRoomName(event.target.value);
-  };
+  const { create, isLoading, error } = CreateRoom();
+  const [msg, setmsg] = useState("");
 
-  const handleRoomTitleChange = (event) => {
-    setRoomTitle(event.target.value);
-  };
-
-  const handleRoomPriceChange = (event) => {
-    setRoomPrice(event.target.value);
-  };
-
-  const handleRoomDescriptionChange = (event) => {
-    setRoomDescription(event.target.value);
-  };
-
-  const handleRoomUrlChange = (event) => {
-    setRoomUrl(event.target.value);
-  };
-
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     // Perform form submission logic here
-    console.log('Room Name:', roomName);
-    console.log('Room Title:', roomTitle);
-    console.log('Room Price:', roomPrice);
-    console.log('Room Description:', roomDescription);
-    console.log('Room URL:', roomUrl);
-    // Reset form fields
-    setRoomName('');
-    setRoomTitle('');
-    setRoomPrice('');
-    setRoomDescription('');
-    setRoomUrl('');
+    console.log("Title:", title);
+    console.log("Description:", description);
+    console.log("Price:", price);
+    console.log("Person Count:", personCount);
+    console.log("Bedroom Count:", bedroomCount);
+    console.log("AC Count:", acCount);
+    console.log("Image URL:", imgUrl);
+
+    const success = await create(
+      title,
+      description,
+      price,
+      personCount,
+      bedroomCount,
+      acCount,
+      imgUrl
+    );
+    if (success) {
+      setmsg("Room Created");
+      setTitle("");
+      setDescription("");
+      setPrice("");
+      setPersonCount("");
+      setBedroomCount("");
+      setAcCount("");
+      setImgUrl("");
+    }
   };
 
   return (
-    <div className="add-room-form">
-      <h2>Add Room</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <input
-            type="text"
-            id="roomName"
-            value={roomName}
-            onChange={handleRoomNameChange}
+    <div style={{ maxWidth: "60vw" }}>
+      <Form onSubmit={handleSubmit}>
+        <h2 className='text-center'>ADD ROOM</h2>
+        <Form.Group controlId='title'>
+          <Form.Label>Title</Form.Label>
+          <Form.Control
+            type='text'
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
             required
           />
-          <label htmlFor="roomName">Room Name</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            id="roomTitle"
-            value={roomTitle}
-            onChange={handleRoomTitleChange}
+        </Form.Group>
+        <Form.Group controlId='description'>
+          <Form.Label>Description</Form.Label>
+          <Form.Control
+            as='textarea'
+            rows={4}
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
             required
           />
-          <label htmlFor="roomTitle">Room Title</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="number"
-            id="roomPrice"
-            value={roomPrice}
-            onChange={handleRoomPriceChange}
+        </Form.Group>
+        <Form.Group controlId='price'>
+          <Form.Label>Price</Form.Label>
+          <Form.Control
+            type='number'
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
             required
           />
-          <label htmlFor="roomPrice">Room Price</label>
-        </div>
-        <div className="form-group">
-          <textarea
-            id="roomDescription"
-            value={roomDescription}
-            onChange={handleRoomDescriptionChange}
-            required
-          ></textarea>
-          <label htmlFor="roomDescription">Room Description</label>
-        </div>
-        <div className="form-group">
-          <input
-            type="text"
-            id="roomUrl"
-            value={roomUrl}
-            onChange={handleRoomUrlChange}
+        </Form.Group>
+        <Form.Group controlId='personCount'>
+          <Form.Label>Person Count</Form.Label>
+          <Form.Control
+            type='number'
+            value={personCount}
+            onChange={(e) => setPersonCount(e.target.value)}
             required
           />
-          <label htmlFor="roomUrl">Room Image URL</label>
-        </div>
-        <button type="submit">Add Room</button>
-      </form>
+        </Form.Group>
+        <Form.Group controlId='bedroomCount'>
+          <Form.Label>Bedroom Count</Form.Label>
+          <Form.Control
+            type='number'
+            value={bedroomCount}
+            onChange={(e) => setBedroomCount(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId='acCount'>
+          <Form.Label>AC Count</Form.Label>
+          <Form.Control
+            type='number'
+            value={acCount}
+            onChange={(e) => setAcCount(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group controlId='imgUrl'>
+          <Form.Label>Image URL</Form.Label>
+          <Form.Control
+            type='text'
+            value={imgUrl}
+            onChange={(e) => setImgUrl(e.target.value)}
+            required
+          />
+        </Form.Group>
+        {isLoading && <Loader />}
+        {error && <Alert variant='danger'>{error}</Alert>}
+        {msg && <Alert variant='success'>{msg}</Alert>}
+        <Button
+          variant='primary'
+          type='submit'
+          className='my-3'
+          disabled={isLoading}
+        >
+          Add Room
+        </Button>
+      </Form>
     </div>
   );
 };

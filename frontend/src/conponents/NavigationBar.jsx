@@ -1,36 +1,58 @@
-import { Button, Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
+import React from "react";
+import { Container, Nav, Navbar } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useAuthContext } from "../hooks/useAuthContext";
-
+import { RiHome2Line, RiUserLine } from "react-icons/ri";
+import { FaSignOutAlt } from "react-icons/fa";
 import useLogout from "../hooks/useLogout";
+import "./NavigationBar.css";
 
 const NavigationBar = () => {
   const { user } = useAuthContext();
-
   const { logout } = useLogout();
 
   const logoutHandler = async () => {
     await logout();
   };
+
   return (
-    <header>
+    <header className='navbar-header'>
       <Navbar bg='dark' variant='dark' expand='lg' collapseOnSelect>
-        <Container>
-          <LinkContainer to='/'>
-            <Navbar.Brand>Hotel</Navbar.Brand>
-          </LinkContainer>
+        <Container fluid>
+          <Navbar.Brand>
+            <LinkContainer to='/'>
+              <Nav.Link>
+                <RiHome2Line className='home-icon' />
+                Hotel
+              </Nav.Link>
+            </LinkContainer>
+          </Navbar.Brand>
           <Navbar.Toggle aria-controls='basic-navbar-nav' />
           <Navbar.Collapse id='basic-navbar-nav'>
             <Nav className='ms-auto'>
               {user ? (
                 <>
-                  <LinkContainer to='/profile'>
-                    <Nav.Link>{user.name}</Nav.Link>
-                  </LinkContainer>
-
-                  <Button onClick={logoutHandler} variant='secondary'>
+                  {user.userType === "admin" ? (
+                    <>
+                      <LinkContainer to='/dashboard'>
+                        <Nav.Link>
+                          <RiUserLine className='user-icon' />
+                          {user.name}
+                        </Nav.Link>
+                      </LinkContainer>
+                    </>
+                  ) : (
+                    <LinkContainer to='/userdashboard'>
+                      <Nav.Link>
+                        <RiUserLine className='user-icon' />
+                        {user.name}
+                      </Nav.Link>
+                    </LinkContainer>
+                  )}
+                  <Nav.Link onClick={logoutHandler}>
+                    <FaSignOutAlt className='logout-icon' />
                     Logout
-                  </Button>
+                  </Nav.Link>
                 </>
               ) : (
                 <>
@@ -41,19 +63,6 @@ const NavigationBar = () => {
                     <Nav.Link>Register</Nav.Link>
                   </LinkContainer>
                 </>
-              )}
-              {user && user.userType === "admin" && (
-                <NavDropdown title={"Admin"} id='adminmenu'>
-                  <LinkContainer to='/admin/userList'>
-                    <NavDropdown.Item>Users</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to='/admin/productList'>
-                    <NavDropdown.Item>Products</NavDropdown.Item>
-                  </LinkContainer>
-                  <LinkContainer to='/admin/orderList'>
-                    <NavDropdown.Item>Orders</NavDropdown.Item>
-                  </LinkContainer>
-                </NavDropdown>
               )}
             </Nav>
           </Navbar.Collapse>
