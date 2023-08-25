@@ -26,6 +26,7 @@ function Home() {
         const response = await getRooms();
         setRooms(response.slice(0, 3));
       } catch (error) {
+        setRooms({});
         console.log(error);
       }
 
@@ -33,6 +34,7 @@ function Home() {
         const response = await getAll();
         setOtherFacilies(response);
       } catch (error) {
+        setOtherFacilies({});
         console.log(error);
       }
     };
