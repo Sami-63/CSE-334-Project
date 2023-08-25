@@ -20,9 +20,7 @@ const FacilityCard = ({ facility }) => {
               to={`/facility/${facility.id}`}
               style={{ textDecoration: "none" }}
             >
-              <Button variant='primary' block>
-                View Details
-              </Button>
+              <Button variant='primary'>View Details</Button>
             </Link>
           </div>
         </Card.Body>

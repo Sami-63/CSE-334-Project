@@ -8,7 +8,6 @@ import { CheckBooking } from "../actions/roomActions";
 import {
   CheckFacilityBooking,
   CreateFacilityBooking,
-  GetMyFacilityBookings,
 } from "../actions/facilityActions";
 
 // eslint-disable-next-line react/prop-types
@@ -95,13 +94,13 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
     // using the entered data
 
     const id = selectedFacility.id;
-    const bookingData = {
-      checkInDate,
-      checkOutDate,
-      id,
-      calculatedPrice,
-    };
-    console.log(bookingData);
+    // const bookingData = {
+    //   checkInDate,
+    //   checkOutDate,
+    //   id,
+    //   calculatedPrice,
+    // };
+    // console.log(bookingData);
     console.log("PaymentModal - selectedRoom:", selectedFacility);
     console.log("PaymentModal - calculatedPrice:", calculatedPrice);
 
@@ -113,6 +112,7 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
       id,
       calculatedPrice
     );
+    console.log("success , error => ", success, error);
     if (!error && success) {
       handleClose();
       setText("Booking successful");

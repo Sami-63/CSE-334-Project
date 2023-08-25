@@ -21,9 +21,7 @@ const Description = () => {
             </p>
             {!user && (
               <LinkContainer to='/register'>
-                <Button>
-                  <a>Get Started &raquo;</a>
-                </Button>
+                <Button>Get Started &raquo;</Button>
               </LinkContainer>
             )}
           </Col>

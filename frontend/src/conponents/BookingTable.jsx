@@ -3,6 +3,7 @@ import Loader from "./Loader";
 import { useEffect, useState } from "react";
 import { GetAllFacilityBookings } from "../actions/facilityActions";
 import { GetAllBookings } from "../actions/bookingActions";
+import { format } from "date-fns";
 
 const BookingsTable = () => {
   const {
@@ -27,8 +28,8 @@ const BookingsTable = () => {
       console.log("response bookings => ", response);
 
       const response1 = await getBookings();
-      setFacilityBookings(response1);
-      console.log("response1 facility bookings => ", response1);
+      setFacilityBookings(response1.otherbookings);
+      console.log("response1 facility bookings => ", response1.otherbookings);
     };
 
     fetchdata();
@@ -58,8 +59,10 @@ const BookingsTable = () => {
                 roomBookings.map((booking) => (
                   <tr key={booking.id}>
                     <td>{booking.id}</td>
-                    <td>{booking.startDate}</td>
-                    <td>{booking.endDate}</td>
+                    <td>
+                      {format(new Date(booking.startDate), "MMM d, yyyy")}
+                    </td>
+                    <td>{format(new Date(booking.endDate), "MMM d, yyyy")}</td>
                     <td>{booking.customerEmail}</td>
                     <td>{booking.roomId}</td>
                     <td>{booking.paymentAmount}</td>
@@ -90,8 +93,10 @@ const BookingsTable = () => {
                 facilityBookings.map((booking) => (
                   <tr key={booking.id}>
                     <td>{booking.id}</td>
-                    <td>{booking.startDate}</td>
-                    <td>{booking.endDate}</td>
+                    <td>
+                      {format(new Date(booking.startDate), "MMM d, yyyy")}
+                    </td>
+                    <td>{format(new Date(booking.endDate), "MMM d, yyyy")}</td>
                     <td>{booking.customerEmail}</td>
                     <td>{booking.facilityId}</td>
                     <td>{booking.paymentAmount}</td>

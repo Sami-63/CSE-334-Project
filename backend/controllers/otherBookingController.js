@@ -5,6 +5,12 @@ const createFacilityBooking = asyncHandler(async (req, res) => {
   const { startDate, endDate, facilityId, paymentAmount } = req.body;
   const email = req.user.email;
 
+  console.log("[controller] startDate => ", startDate);
+  console.log("[controller] endDate => ", endDate);
+  console.log("[controller] facilityId => ", facilityId);
+  console.log("[controller] paymentAmount => ", paymentAmount);
+  console.log("[controller] email => ", email);
+
   if (startDate && endDate && facilityId && paymentAmount) {
     const otherbooking = new OtherBooking({
       startDate,

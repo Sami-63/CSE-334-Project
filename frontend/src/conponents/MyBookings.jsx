@@ -4,9 +4,11 @@ import { GetMyFacilityBookings } from "../actions/facilityActions";
 import { Alert, Button, Container, Table } from "react-bootstrap";
 import Loader from "./Loader";
 import StarRatingModal from "./StarRatingModal";
+import { format } from "date-fns";
 
 const MyBookings = () => {
   const [showPopup, setShowPopup] = useState(false);
+  const [render, setRender] = useState(0);
 
   const [facilityInfo, setFacilityInfo] = useState({
     type: null,
@@ -50,7 +52,7 @@ const MyBookings = () => {
     };
 
     fetchdata();
-  }, []);
+  }, [render]);
 
   const openPopup = () => {
     setShowPopup(true);
@@ -82,8 +84,9 @@ const MyBookings = () => {
             {roomBookings?.map((booking) => (
               <tr key={booking.id}>
                 <td>{booking.id}</td>
-                <td>{booking.startDate}</td>
-                <td>{booking.endDate}</td>
+                <td>{format(new Date(booking.startDate), "MMM d, yyyy")}</td>
+                <td>{format(new Date(booking.endDate), "MMM d, yyyy")}</td>
+
                 <td>{booking.roomId}</td>
                 <td>{booking.paymentAmount}</td>
 
@@ -121,7 +124,7 @@ const MyBookings = () => {
               <th>ID</th>
               <th>Start Date</th>
               <th>End Date</th>
-              <th>Customer Email</th>
+
               <th>Facility ID</th>
               <th>Payment Amount</th>
               <th>Given Rating</th>
@@ -131,9 +134,9 @@ const MyBookings = () => {
             {facilityBookings?.map((booking) => (
               <tr key={booking.id}>
                 <td>{booking.id}</td>
-                <td>{booking.startDate}</td>
-                <td>{booking.endDate}</td>
-                <td>{booking.customerEmail}</td>
+                <td>{format(new Date(booking.startDate), "MMM d, yyyy")}</td>
+                <td>{format(new Date(booking.endDate), "MMM d, yyyy")}</td>
+
                 <td>{booking.facilityId}</td>
                 <td>{booking.paymentAmount}</td>
                 <td>
@@ -186,6 +189,8 @@ const MyBookings = () => {
         show={showPopup}
         onHide={closePopup}
         facilityinfo={facilityInfo}
+        setRender={setRender}
+        render={render}
       />
     </div>
   );

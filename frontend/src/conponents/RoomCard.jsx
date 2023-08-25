@@ -17,9 +17,7 @@ const RoomCard = ({ room }) => {
           </Card.Text>
           <div className='mt-auto'>
             <Link to={`/room/${room.id}`} style={{ textDecoration: "none" }}>
-              <Button variant='primary' block>
-                View Details
-              </Button>
+              <Button variant='primary'>View Details</Button>
             </Link>
           </div>
         </Card.Body>

@@ -305,22 +305,23 @@ const CreateFacilityBooking = () => {
 const GiveRatingToFacility = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
+  const { user } = useAuthContext();
 
-  const giveFacilityRating = async (id, checkinDate, checkoutdate) => {
+  const giveFacilityRating = async (id, rating) => {
     setIsLoading(true);
     setError(null);
 
     const response = await fetch(
-      `http://localhost:4000/api/other-bookings/check-booking`,
+      `http://localhost:4000/api/other-bookings/rating`,
       {
-        method: "POST",
+        method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
           id,
-          checkinDate,
-          checkoutdate,
+          rating,
         }),
       }
     );
@@ -330,13 +331,13 @@ const GiveRatingToFacility = () => {
       setIsLoading(false);
       setError(json.error);
       console.log("error = ", error);
-      return null;
+      return false;
     }
 
     if (response.ok) {
       console.log("json -> ", json);
       setIsLoading(false);
-      return json.response;
+      return true;
     }
   };
 

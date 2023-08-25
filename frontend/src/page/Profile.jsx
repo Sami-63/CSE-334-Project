@@ -32,11 +32,11 @@ const Profile = () => {
         else {
           setName(response.name);
           setEmail(response.email);
-          setNidNumber(response.nidNumber);
-          setPhoneNumber(response.phoneNumber);
-          setBankName(response.bankName);
-          setAccountNumber(response.accountNumber);
-          setBkashNumber(response.bkashNumber);
+          setNidNumber(response.nidNumber || "");
+          setPhoneNumber(response.phoneNumber || "");
+          setBankName(response.bankName || "");
+          setAccountNumber(response.accountNumber || "");
+          setBkashNumber(response.bkashNumber || "");
         }
       } catch (error) {
         console.error("Error fetching profile info:", error);
