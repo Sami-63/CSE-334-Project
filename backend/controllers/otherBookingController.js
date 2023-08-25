@@ -79,7 +79,7 @@ const myOtherBookings = asyncHandler(async (req, res) => {
 
   const { otherbookings, error } = await OtherBooking.getBookingsByEmail(email);
 
-  console.log("otherbookings, error => ", otherbookings, error);
+  // console.log("otherbookings, error => ", otherbookings, error);
 
   if (!error) {
     res.json(otherbookings);
@@ -114,6 +114,13 @@ const filterFacility = asyncHandler(async (req, res) => {
 });
 const isFacilityBookingPossible = asyncHandler(async (req, res) => {
   const { id, checkinDate, checkoutdate } = req.body;
+
+  console.log(
+    "id, checkinDate, checkoutdate => ",
+    id,
+    checkinDate,
+    checkoutdate
+  );
 
   if (id && checkinDate && checkoutdate) {
     const { response, error } = await OtherBooking.isBookingPossible(

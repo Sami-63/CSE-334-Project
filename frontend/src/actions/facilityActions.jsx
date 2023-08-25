@@ -151,7 +151,7 @@ const CheckFacilityBooking = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
-  const check = async (id, checkinDate, checkoutdate) => {
+  const checkFacilityBooking = async (id, checkinDate, checkoutdate) => {
     setIsLoading(true);
     setError(null);
 
@@ -159,11 +159,14 @@ const CheckFacilityBooking = () => {
       `http://localhost:4000/api/other-bookings/check-booking`,
       {
         method: "POST",
-        body: {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
           id,
           checkinDate,
           checkoutdate,
-        },
+        }),
       }
     );
     const json = await response.json();
@@ -182,7 +185,7 @@ const CheckFacilityBooking = () => {
     }
   };
 
-  return { check, isLoading, error };
+  return { checkFacilityBooking, isLoading, error };
 };
 
 const GetAllFacility = () => {
@@ -254,6 +257,92 @@ const GetMyFacilityBookings = () => {
   return { getmyFacilityBooking, isLoading, error };
 };
 
+const CreateFacilityBooking = () => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+
+  const { user } = useAuthContext();
+
+  const bookNow = async (checkInDate, checkOutDate, id, calculatedPrice) => {
+    setIsLoading(true);
+    setError(null);
+
+    const response = await fetch(
+      "http://localhost:4000/api/other-bookings/create",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+        body: JSON.stringify({
+          startDate: checkInDate,
+          endDate: checkOutDate,
+          facilityId: id,
+          paymentAmount: calculatedPrice,
+        }),
+      }
+    );
+    const json = await response.json();
+
+    if (!response.ok) {
+      setIsLoading(false);
+      setError(json.error);
+      console.log("error = ", error);
+      return null;
+    }
+
+    if (response.ok) {
+      console.log("json -> ", json);
+      setIsLoading(false);
+      return json;
+    }
+  };
+
+  return { bookNow, isLoading, error };
+};
+
+const GiveRatingToFacility = () => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+
+  const giveFacilityRating = async (id, checkinDate, checkoutdate) => {
+    setIsLoading(true);
+    setError(null);
+
+    const response = await fetch(
+      `http://localhost:4000/api/other-bookings/check-booking`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          id,
+          checkinDate,
+          checkoutdate,
+        }),
+      }
+    );
+    const json = await response.json();
+
+    if (!response.ok) {
+      setIsLoading(false);
+      setError(json.error);
+      console.log("error = ", error);
+      return null;
+    }
+
+    if (response.ok) {
+      console.log("json -> ", json);
+      setIsLoading(false);
+      return json.response;
+    }
+  };
+
+  return { giveFacilityRating, isLoading, error };
+};
+
 export {
   GetAllFacilityBookings,
   GetFacility,
@@ -262,4 +351,6 @@ export {
   CreateFacility,
   GetAllFacility,
   GetMyFacilityBookings,
+  CreateFacilityBooking,
+  GiveRatingToFacility,
 };

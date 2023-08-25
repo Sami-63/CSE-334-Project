@@ -1,18 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  Container,
-  Card,
-  Alert,
-  Row,
-  Col,
-  Image,
-  Button,
-} from "react-bootstrap";
+import { Container, Card, Alert, Row, Col, Button } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetFacility } from "../actions/facilityActions";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Loader from "../conponents/Loader";
-import PaymentModal from "../conponents/PaymentModal";
+
+import PaymentModal2 from "../conponents/PaymentModal2";
 
 const FacilityPage = () => {
   const { id } = useParams();
@@ -28,7 +21,7 @@ const FacilityPage = () => {
   const [message, setMessage] = useState("");
 
   const { getFacility, isLoading, error } = GetFacility();
-  const [showPaymentModal, setShowPaymentModal] = useState(false); // New state for PaymentModal
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
 
   const { user } = useAuthContext();
   const navigate = useNavigate();
@@ -45,12 +38,12 @@ const FacilityPage = () => {
     e.preventDefault();
     if (!user) navigate("/login");
     else {
-      handleOpenPaymentModal(); // Open PaymentModal when submitting the form
+      handleOpenPaymentModal();
     }
   };
 
   useEffect(() => {
-    const fetchdata = async () => {
+    const fetchData = async () => {
       try {
         const response = await getFacility(id);
         setFacility(response);
@@ -59,58 +52,52 @@ const FacilityPage = () => {
       }
     };
 
-    fetchdata();
-  }, []);
+    fetchData();
+  }, [id]);
 
   return (
-    <Card>
-      {isLoading && <Loader />}
-      {error && <Alert variant='danger'>{error}</Alert>}
-      {!isLoading && (
-        <Card.Body>
-          <Card.Title>{facility.title}</Card.Title>
-          <Card.Text>Rating: {facility.rating}/5</Card.Text>
-          <Container>
-            <Row>
-              <Col md={8}>
-                <Image src={facility.imgUrl} alt={facility.title} fluid />
-              </Col>
-              <Col md={3}>
-                <Row>
-                  <Col>
-                    <Card.Text>Capacity:</Card.Text>
+    <Container className='my-4'>
+      <Row className='justify-content-center'>
+        <Col md={12}>
+          <Card>
+            {isLoading && <Loader />}
+            {error && <Alert variant='danger'>{error}</Alert>}
+            {!isLoading && (
+              <Row>
+                <Col md={6}>
+                  <Card.Img
+                    variant='top'
+                    src={facility.imgUrl}
+                    style={{ height: "100%" }}
+                  />
+                </Col>
+                <Col md={6} className='my-4'>
+                  <Card.Body>
+                    <Card.Title>{facility.title}</Card.Title>
+                    <Card.Text>Rating: {facility.rating}/5</Card.Text>
                     <Card.Text>{facility.description}</Card.Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Button
-                    variant='primary'
-                    type='submit'
-                    className='my-3'
-                    onClick={handleSubmit}
-                  >
-                    Book Now
-                  </Button>
-                </Row>
-              </Col>
-            </Row>
-          </Container>
-        </Card.Body>
-      )}
+                    <Button variant='primary' onClick={handleSubmit}>
+                      Book Now
+                    </Button>
+                  </Card.Body>
+                </Col>
+              </Row>
+            )}
+          </Card>
+          {message && <Alert variant='success'>{message}</Alert>}
+        </Col>
+      </Row>
 
-      {message && <Alert variant='success'>{message}</Alert>}
-
-      {/* PaymentModal component */}
       {showPaymentModal && (
-        <PaymentModal
+        <PaymentModal2
           show={showPaymentModal}
           handleClose={handleClosePaymentModal}
-          selectedRoom={roomData}
-          price={roomData.price}
+          selectedFacility={facility}
+          price={facility.price}
           setText={setMessage}
         />
       )}
-    </Card>
+    </Container>
   );
 };
 

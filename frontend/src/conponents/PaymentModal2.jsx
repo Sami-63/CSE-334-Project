@@ -5,9 +5,14 @@ import { MakeBooking } from "../actions/bookingActions";
 import Loader from "./Loader";
 import { Alert } from "react-bootstrap";
 import { CheckBooking } from "../actions/roomActions";
+import {
+  CheckFacilityBooking,
+  CreateFacilityBooking,
+  GetMyFacilityBookings,
+} from "../actions/facilityActions";
 
 // eslint-disable-next-line react/prop-types
-const PaymentModal = ({ show, handleClose, selectedFacility, setText }) => {
+const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
   const [checkInDate, setCheckInDate] = useState("");
   const [checkOutDate, setCheckOutDate] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("");
@@ -19,16 +24,26 @@ const PaymentModal = ({ show, handleClose, selectedFacility, setText }) => {
 
   const [message, setMessage] = useState(null);
   const {
-    checkBooking,
+    checkFacilityBooking,
     isLoading: isBookingLoading,
     error: BookingError,
-  } = CheckBooking();
+  } = CheckFacilityBooking();
 
   useEffect(() => {
     const fetchData = async () => {
       if (checkInDate && checkOutDate) {
         const id = selectedFacility.id;
-        const success = await checkBooking(id, checkInDate, checkOutDate);
+
+        console.log("id -> ", id);
+        console.log("checkInDate -> ", checkInDate);
+        console.log("checkOutDate -> ", checkOutDate);
+
+        const success = await checkFacilityBooking(
+          id,
+          checkInDate,
+          checkOutDate
+        );
+
         if (success && checkInDate <= checkOutDate) {
           setMessage({
             type: "success",
@@ -66,7 +81,7 @@ const PaymentModal = ({ show, handleClose, selectedFacility, setText }) => {
     }
   };
 
-  const { bookNow, isLoading, error } = MakeBooking();
+  const { bookNow, isLoading, error } = CreateFacilityBooking();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -120,7 +135,7 @@ const PaymentModal = ({ show, handleClose, selectedFacility, setText }) => {
     <div className='modal-overlay'>
       <div className='payment-modal'>
         <h2>Confirm Your Booking</h2>
-        <p>Room: {selectedFacility && selectedFacility.description}</p>
+        <h3> {selectedFacility && selectedFacility.title}</h3>
         <p>Calculated Price: ${calculatedPrice}</p>
         {isBookingLoading && <Loader />}
         {BookingError && <Alert> {BookingError} </Alert>}
@@ -198,4 +213,4 @@ const PaymentModal = ({ show, handleClose, selectedFacility, setText }) => {
   );
 };
 
-export default PaymentModal;
+export default PaymentModal2;
