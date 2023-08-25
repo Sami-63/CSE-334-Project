@@ -22,8 +22,9 @@ const Description = () => {
             {!user && (
               <LinkContainer to='/register'>
                 <a className='link-container'>Get Started &raquo;</a>
+                
               </LinkContainer>
-            )}
+            )}    
           </Col>
           <Col md={6} className="text-center">
             <img
