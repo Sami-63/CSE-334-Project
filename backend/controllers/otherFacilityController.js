@@ -57,6 +57,7 @@ const getAllFacility = asyncHandler(async (req, res) => {
     res.json(allFacility);
   } else {
     res.status(500);
+    console.log(error);
     throw new Error("Error while fetching all facilities");
   }
 });

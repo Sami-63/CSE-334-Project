@@ -1,87 +1,38 @@
-/* eslint-disable react/prop-types */
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./PaymentModal.css"; // Your CSS file
 import { MakeBooking } from "../actions/bookingActions";
 import Loader from "./Loader";
 import { Alert } from "react-bootstrap";
 import { CheckBooking } from "../actions/roomActions";
-import {
-  CheckFacilityBooking,
-  CreateFacilityBooking,
-  GetMyFacilityBookings,
-} from "../actions/facilityActions";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { FiCalendar } from "react-icons/fi";
 
-// eslint-disable-next-line react/prop-types
-const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
-  const [checkInDate, setCheckInDate] = useState("");
-  const [checkOutDate, setCheckOutDate] = useState("");
+const PaymentModal2 = ({ show, handleClose, selectedRoom, setText }) => {
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedCheckInTime, setSelectedCheckInTime] = useState(null);
+  const [selectedCheckOutTime, setSelectedCheckOutTime] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState("");
   const [pin, setPin] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-  const [calculatedPrice, setCalculatedPrice] = useState(
-    selectedFacility.price
-  );
+  const [calculatedPrice, setCalculatedPrice] = useState(selectedRoom.price);
 
-  const [message, setMessage] = useState(null);
-  const {
-    checkFacilityBooking,
-    isLoading: isBookingLoading,
-    error: BookingError,
-  } = CheckFacilityBooking();
+  const { checkBooking, isLoading: isBookingLoading, error: BookingError } =
+    CheckBooking();
+  const { bookNow, isLoading, error } = MakeBooking();
 
   useEffect(() => {
-    const fetchData = async () => {
-      if (checkInDate && checkOutDate) {
-        const id = selectedFacility.id;
+    calculatePrice();
+  }, [selectedCheckInTime, selectedCheckOutTime]);
 
-        console.log("id -> ", id);
-        console.log("checkInDate -> ", checkInDate);
-        console.log("checkOutDate -> ", checkOutDate);
-
-        const success = await checkFacilityBooking(
-          id,
-          checkInDate,
-          checkOutDate
-        );
-
-        if (success && checkInDate <= checkOutDate) {
-          setMessage({
-            type: "success",
-            msg: "Booking possible",
-          });
-        } else {
-          setMessage({
-            type: "danger",
-            msg: "Booking not possible",
-          });
-        }
-      }
-    };
-    console.log("checkInDate, checkOutDate =>", checkInDate, checkOutDate);
-    fetchData();
-  }, [checkInDate, checkOutDate, selectedFacility.id]);
-
-  const handleCheckInDateChange = (date) => {
-    setCheckInDate(date);
-    calculatePrice(date, checkOutDate);
-  };
-
-  const handleCheckOutDateChange = (date) => {
-    setCheckOutDate(date);
-    calculatePrice(checkInDate, date);
-  };
-
-  const calculatePrice = (startDate, endDate) => {
-    if (startDate && endDate) {
-      const startDateObj = new Date(startDate);
-      const endDateObj = new Date(endDate);
-      const timeDifference = endDateObj - startDateObj;
-      const numOfDays = Math.ceil(timeDifference / (1000 * 3600 * 24));
-      setCalculatedPrice(selectedFacility.price * numOfDays);
+  const calculatePrice = () => {
+    if (selectedCheckInTime && selectedCheckOutTime) {
+      const timeDifference =
+        selectedCheckOutTime - selectedCheckInTime;
+      const numOfMinutes = timeDifference / (1000 * 60);
+      setCalculatedPrice((selectedRoom.price * numOfMinutes) / 30);
     }
   };
-
-  const { bookNow, isLoading, error } = CreateFacilityBooking();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -91,29 +42,26 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
       return;
     }
 
-    // Here you can handle the form submission, like making a payment request
-    // using the entered data
-
-    const id = selectedFacility.id;
+    const id = selectedRoom.id;
     const bookingData = {
-      checkInDate,
-      checkOutDate,
+      checkInDate: selectedDate,
+      checkInTime: selectedCheckInTime,
+      checkOutDate: selectedDate,
+      checkOutTime: selectedCheckOutTime,
       id,
       calculatedPrice,
     };
-    console.log(bookingData);
-    console.log("PaymentModal - selectedRoom:", selectedFacility);
-    console.log("PaymentModal - calculatedPrice:", calculatedPrice);
 
-    // After handling the payment, you can close the modal
-
-    const { success, error } = await bookNow(
-      checkInDate,
-      checkOutDate,
+    const { success } = await bookNow(
+      selectedDate,
+      selectedCheckInTime,
+      selectedDate,
+      selectedCheckOutTime,
       id,
       calculatedPrice
     );
-    if (!error && success) {
+
+    if (success) {
       handleClose();
       setText("Booking successful");
     } else {
@@ -121,52 +69,81 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
     }
   };
 
-  const handlePaymentMethodChange = (e) => {
-    setPaymentMethod(e.target.value);
-
-    setErrorMessage("");
-  };
-
   if (!show) {
     return null;
   }
 
+
+  const sixAM = new Date();
+  sixAM.setHours(6, 0, 0); // Set minimum time to 6:00 AM
+
+  const tenPM = new Date();
+  tenPM.setHours(22, 0, 0); // Set maximum time to 10:00 PM
+  
   return (
     <div className='modal-overlay'>
       <div className='payment-modal'>
         <h2>Confirm Your Booking</h2>
-        <h3> {selectedFacility && selectedFacility.title}</h3>
-        <p>Calculated Price: ${calculatedPrice}</p>
+        <p>Room: {selectedRoom && selectedRoom.description}</p>
+        <p>Calculated Price: ${calculatedPrice.toFixed(2)}</p>
         {isBookingLoading && <Loader />}
-        {BookingError && <Alert> {BookingError} </Alert>}
+        {BookingError && <Alert variant='danger'>{BookingError}</Alert>}
         <form onSubmit={handleSubmit}>
           <div className='form-row'>
             <label htmlFor='checkInDate'>Check-in Date:</label>
-            <input
-              type='date'
-              id='checkInDate'
-              value={checkInDate}
-              min={new Date().toISOString().split("T")[0]}
-              onChange={(e) => handleCheckInDateChange(e.target.value)}
-              required
+            <DatePicker
+              selected={selectedDate}
+              onChange={(date) => setSelectedDate(date)}
+              minDate={new Date()}
+              dateFormat='MM/dd/yyyy'
+              placeholderText='Select date'
             />
-
-            <label htmlFor='checkOutDate'>Check-out Date:</label>
-            <input
-              type='date'
-              id='checkOutDate'
-              value={checkOutDate}
-              min={checkInDate}
-              onChange={(e) => handleCheckOutDateChange(e.target.value)}
-              required
-            />
+            <div className="calendar-icon">
+              <FiCalendar />
+            </div>
+          </div>
+          <div className='form-row'>
+            <label htmlFor='checkInTime' className='time-label'>
+              Check-in Time:
+            </label>
+            <div className='time-picker'>
+              <DatePicker
+                selected={selectedCheckInTime}
+                onChange={(time) => setSelectedCheckInTime(time)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30}
+                minTime={sixAM} // Minimum time: 6:00 AM
+                maxTime={tenPM} // Maximum time: 10:00 PM
+                timeCaption='Time'
+                dateFormat='h:mm aa'
+                placeholderText='Select time'
+              />
+            </div>
+            <label htmlFor='checkOutTime' className='time-label'>
+              Check-out Time:
+            </label>
+            <div className='time-picker'>
+              <DatePicker
+                selected={selectedCheckOutTime}
+                onChange={(time) => setSelectedCheckOutTime(time)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30}
+                minTime={selectedCheckInTime} // Minimum time is the selected check-in time
+                maxTime={tenPM} // Maximum time: 10:00 PM
+                timeCaption='Time'
+                dateFormat='h:mm aa'
+                placeholderText='Select time'
+              />
+            </div>
           </div>
           <div className='form-row'>
             <label htmlFor='paymentMethod'>Payment Method:</label>
             <select
               id='paymentMethod'
               value={paymentMethod}
-              onChange={handlePaymentMethodChange}
+              onChange={(e) => setPaymentMethod(e.target.value)}
               required
             >
               <option value=''>Select a payment method</option>
@@ -174,7 +151,6 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
               <option value='mobile'>Mobile Banking</option>
             </select>
           </div>
-
           {paymentMethod && (
             <div className='form-row'>
               <label htmlFor='pin'>PIN:</label>
@@ -187,23 +163,14 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
               />
             </div>
           )}
-          {message && <Alert variant={message.type}> {message.msg} </Alert>}
           {errorMessage && <p className='error-message'>{errorMessage}</p>}
           <div className='form-row buttons'>
-            <button
-              className='cancel-button'
-              type='button'
-              onClick={handleClose}
-            >
+            <button className='cancel-button' type='button' onClick={handleClose}>
               Cancel
             </button>
-            {error && <Alert>{error}</Alert>}
+            {error && <Alert variant='danger'>{error}</Alert>}
             {isLoading && <Loader />}
-            <button
-              className='confirm-button'
-              type='submit'
-              disabled={isLoading}
-            >
+            <button className='confirm-button' type='submit' disabled={isLoading}>
               Confirm Payment
             </button>
           </div>

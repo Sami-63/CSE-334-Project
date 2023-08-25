@@ -39,67 +39,61 @@ const UserDashboard = () => {
   };
 
   return (
-    <Container className='user-dashboard-container'>
-      <h1 className='text-center mt-4'>Dashboard</h1>
-      <Row className='mt-4'>
-        <Col
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Button
-            variant='primary'
-            className='dashboard-button mx-4'
-            onClick={() => setActiveTab("myBookings")}
-          >
-            My Bookings
-          </Button>
-          <Button
-            variant='primary'
-            className='dashboard-button mx-4'
+    <Container className="user-dashboard-container">
+      <h2>Dashboard</h2>
+      <Row>
+        <Col md={2} className="sidebar">
+        <Button
+            variant="primary"
+            className={`dashboard-button profile-button ${activeTab === "profile" ? "active" : ""}`}
             onClick={() => setActiveTab("profile")}
           >
             Manage Profile
           </Button>
+          <Button
+            variant="primary"
+            className={`dashboard-button my-bookings-button ${activeTab === "myBookings" ? "active" : ""}`}
+            onClick={() => setActiveTab("myBookings")}
+          >
+            My Bookings
+          </Button>
+          
 
-          {user && user.userType === "admin" ? (
+          {user && user.userType === "admin" && (
             <>
               <Button
-                variant='primary'
-                className='dashboard-button mx-4'
+                variant="primary"
+                className={`dashboard-button add-room-button ${activeTab === "addroom" ? "active" : ""}`}
                 onClick={() => setActiveTab("addroom")}
               >
                 Add Room
               </Button>
 
               <Button
-                variant='primary'
-                className='dashboard-button mx-4'
+                variant="primary"
+                className={`dashboard-button add-facility-button ${activeTab === "addfacility" ? "active" : ""}`}
                 onClick={() => setActiveTab("addfacility")}
               >
                 Add Facility
               </Button>
 
               <Button
-                variant='primary'
-                className='dashboard-button mx-4'
+                variant="primary"
+                className={`dashboard-button get-all-bookings-button ${activeTab === "getallbookings" ? "active" : ""}`}
                 onClick={() => setActiveTab("getallbookings")}
               >
                 All Bookings
               </Button>
             </>
-          ) : (
-            <></>
           )}
         </Col>
-      </Row>
-      <Row className='mt-4 justify-content-center'>
-        <Col
-          md={activeTab === "addroom" || activeTab === "addfacility" ? 6 : 12}
-        >
-          {renderContent()}
+        <Col md={10} className="content">
+          <h1 className="text-center mt-4">Dashboard</h1>
+          <Row className="mt-4 justify-content-center">
+            <Col md={activeTab === "addroom" || activeTab === "addfacility" ? 6 : 12}>
+              {renderContent()}
+            </Col>
+          </Row>
         </Col>
       </Row>
     </Container>

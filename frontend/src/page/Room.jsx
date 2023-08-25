@@ -67,13 +67,13 @@ const Room = () => {
   }, [id]);
 
   return (
-    <Card>
+    <Card className="room-card">
       {isLoading && <Loader />}
-      {error && <Alert variant='danger'>{error}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
       {!isLoading && (
         <Card.Body>
           <Card.Title>{roomData.title}</Card.Title>
-          <Card.Text>Rating: {roomData.rating}/5</Card.Text>
+          <Card.Text className="rating">Rating: {roomData.rating}/5</Card.Text>
           <Container>
             <Row>
               <Col md={8}>
@@ -82,20 +82,31 @@ const Room = () => {
               <Col md={3}>
                 <Row>
                   <Col>
-                    <Card.Text>Capacity:</Card.Text>
-                    <Card.Text>{roomData.personCount} persons</Card.Text>
-                    <Card.Text>{roomData.bedroomCount} bedrooms</Card.Text>
-                    <Card.Text>
-                      Air Conditioning: {roomData.acCount ? "Yes" : "No"}
+                    <div className="room-details">
+                      <h3>Room Details</h3>
+                      <ul>
+                        <li>
+                          <strong>Capacity        :</strong> {roomData.personCount} persons
+                        </li>
+                        <li>
+                          <strong>Bedrooms        :</strong> {roomData.bedroomCount}
+                        </li>
+                        <li>
+                          <strong>Air Conditioning:</strong>{" "}
+                          {roomData.acCount ? "Yes" : "No"}
+                        </li>
+                      </ul>
+                    </div>
+                    <Card.Text className="description">
+                     <b>Description :{roomData.description}</b> 
                     </Card.Text>
-                    <Card.Text>{roomData.description}</Card.Text>
                   </Col>
                 </Row>
                 <Row>
                   <Button
-                    variant='primary'
-                    type='submit'
-                    className='my-3'
+                    variant="primary"
+                    type="submit"
+                    className="my-3 book-button"
                     onClick={handleSubmit}
                   >
                     Book Now
@@ -107,7 +118,7 @@ const Room = () => {
         </Card.Body>
       )}
 
-      {message && <Alert variant='success'>{message}</Alert>}
+      {message && <Alert variant="success">{message}</Alert>}
 
       {/* PaymentModal component */}
       {showPaymentModal && (

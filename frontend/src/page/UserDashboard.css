@@ -1,81 +1,53 @@
 /* UserDashboard.css */
 
-.user-dashboard {
-    display: flex;
-    height: 100vh;
-  }
-  
-  .sidebar {
-    width: 240px;
-    height: 100%;
-    background-color: #161718;
-    transition: width 0.3s ease-in-out;
-    overflow: hidden;
-    margin-top: -20px;
-    margin-left: -118px;
-  }
-  
-  .sidebar-toggle {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #1a6dc0;
-    border-bottom: 1px solid #dee2e6;
-    cursor: pointer;
-    height: 100px;
-  }
-  
-  .sidebar-toggle-icon {
-    cursor: pointer;
-    color: #fff;
-    font-size: 18px;
-  }
-  
-  .sidebar-menu {
-    padding: 10px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .sidebar-menu-item {
-    padding: 10px;
-    cursor: pointer;
-    color: white;
-  }
-  
-  .sidebar-menu-item.active {
-    font-weight: bold;
-  }
-  
-  .main-content {
-    flex: 1;
-    padding: 20px;
-    transition: margin-left 0.3s ease-in-out;
-    display: flex;
-  }
-  
-  .content {
-    flex: 1;
-  }
-  
-  .sidebar-collapsed {
-    width: 560px;
-  }
-  
- 
-  
-  .sidebar-collapsed .main-content {
-    margin-left: 260px;
-  }
-  
-  .sidebar-menu-item {
-    width: 100%;
-    height: 100%;
-    padding: 20px;
-    box-sizing: border-box;
-    transition: padding 0.3s ease;
-  }
-  
-  .sidebar-collapsed .add-room-form {
-    padding: 10px 10px;
-  }
+.user-dashboard-container {
+  padding: 20px;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.sidebar .dashboard-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* Custom button classes */
+.my-bookings-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.profile-button {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.add-room-button {
+  background-color: #ffc107;
+  color: #fff;
+}
+
+.add-facility-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.get-all-bookings-button {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.content {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
