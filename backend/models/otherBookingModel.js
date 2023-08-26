@@ -224,4 +224,26 @@ OtherBooking.isBookingPossible = async (
   }
 };
 
+OtherBooking.updateRating = async (id) => {
+  try {
+    const response = await new Promise((resolve, reject) => {
+      conn.query(
+        `UPDATE otherfacility SET rating = 
+        (SELECT AVG(givenRating) FROM otherbooking WHERE roomId = ?) WHERE id = ?`,
+        [id, id],
+        (err, res) => {
+          if (err) {
+            reject(err);
+          } else resolve(true);
+        }
+      );
+    });
+
+    return { success: response };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+};
+
 export default OtherBooking;

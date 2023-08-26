@@ -30,7 +30,7 @@ const LoginPage = () => {
 
   return (
     <FormContainer>
-      <h1>Sign In</h1>
+      <h1 className='text-center'>Sign In</h1>
       {error && <Alert variant='danger'>{error}</Alert>}
 
       <Form onSubmit={submitHandler}>
@@ -55,12 +55,17 @@ const LoginPage = () => {
           ></Form.Control>
         </Form.Group>
 
-        <Button type='submit' variant='primary' disabled={isLoading}>
+        <Button
+          type='submit'
+          variant='primary'
+          disabled={isLoading}
+          className='my-3'
+        >
           Sign In
         </Button>
       </Form>
 
-      <Row className='py-3'>
+      <Row>
         <Col>
           New User? <Link to='/register'>Register</Link>
         </Col>

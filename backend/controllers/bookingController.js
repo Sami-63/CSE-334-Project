@@ -100,6 +100,8 @@ const giveRating = asyncHandler(async (req, res) => {
       if (success) {
         const response = await Booking.givenRating(id, rating);
         if (!response.error && response.success) {
+          await Booking.updateRating(id);
+
           res.status(200).send({ success: true });
         } else {
           res.status(500);

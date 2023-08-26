@@ -1,0 +1,53 @@
+/* UserDashboard.css */
+
+.user-dashboard-container {
+  padding: 20px;
+}
+
+.sidebar {
+  width: 200px;
+  background-color: #f7f7f7;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.sidebar .dashboard-button {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+/* Custom button classes */
+.my-bookings-button {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.profile-button {
+  background-color: #28a745;
+  color: #fff;
+}
+
+.add-room-button {
+  background-color: #ffc107;
+  color: #fff;
+}
+
+.add-facility-button {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.get-all-bookings-button {
+  background-color: #6c757d;
+  color: #fff;
+}
+
+.content {
+  padding: 10px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}

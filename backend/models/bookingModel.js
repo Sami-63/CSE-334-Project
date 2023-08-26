@@ -277,4 +277,26 @@ Booking.isBookingPossible = async (id, startDate, endDate) => {
   }
 };
 
+Booking.updateRating = async (id) => {
+  try {
+    const response = await new Promise((resolve, reject) => {
+      conn.query(
+        `UPDATE room SET rating = 
+        (SELECT AVG(givenRating) FROM booking WHERE roomId = ?) WHERE id = ?`,
+        [id, id],
+        (err, res) => {
+          if (err) {
+            reject(err);
+          } else resolve(true);
+        }
+      );
+    });
+
+    return { success: response };
+  } catch (error) {
+    console.log(error);
+    return { error };
+  }
+};
+
 export default Booking;
