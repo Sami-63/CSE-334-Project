@@ -1,54 +1,87 @@
-/* LoginPage.css */
-
-.login-heading {
-  text-align: center;
-  margin-bottom: 1.5rem;
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
 }
 
-.login-icon {
-  margin-right: 0.5rem;
+.image-container {
+  flex: 1;
+  height: 80%;
+  width: 90%;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  margin-right: 20px;
+  position: relative;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.image-container img.active {
+  opacity: 1;
+}
+
+.form-container {
+  flex: 1;
+  height: 50%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+}
+
+.form-label {
+  display: flex;
+  align-items: center;
+}
+
+.form-icon {
+  margin-right: 8px;
 }
 
 .login-button {
+  margin-top: 20px;
   width: 100%;
-  margin-top: 1rem;
 }
 
-.login-button:hover {
-  background-color: #0062cc;
+.register-link {
+  text-decoration: none;
+  color: #007bff;
 }
 
-.login-button:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+
+  .image-container,
+  .form-container {
+    width: 100%;
+    height: 50vh;
+  }
+
+  .form-container {
+    padding: 10px 20px;
+  }
 }
 
-.login-button:disabled:hover {
-  background-color: #6c757d;
-}
-
+/* Additional styles */
 .form-control {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
-  font-weight: bold;
-}
-
-.dont-have-account {
-  font-weight: bold;
-}
-
-@media (min-width: 576px) {
-  .login-button {
-    width: auto;
-    margin-top: 1rem;
-  }
-}
-
-@media (max-width: 576px) {
-  .login-icon {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-  }
+  height: 48px;
+  font-size: 16px;
+  width: 0%; /* Adjust the width as desired */
 }
