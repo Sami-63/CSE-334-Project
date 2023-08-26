@@ -1,54 +1,42 @@
-/* LoginPage.css */
+.login-container {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f0f2f5;
+  border-radius: 8px;
+  margin-top: 80px;
+}
 
-.login-heading {
+.login-container h1 {
+  font-family: "Arial", sans-serif;
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
   text-align: center;
-  margin-bottom: 1.5rem;
 }
 
-.login-icon {
-  margin-right: 0.5rem;
-}
-
-.login-button {
-  width: 100%;
-  margin-top: 1rem;
-}
-
-.login-button:hover {
-  background-color: #0062cc;
-}
-
-.login-button:disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-}
-
-.login-button:disabled:hover {
-  background-color: #6c757d;
-}
-
-.form-control {
-  margin-bottom: 1rem;
-}
-
-.form-group label {
+.login-container .form-label {
+  font-family: "Arial", sans-serif;
   font-weight: bold;
 }
 
-.dont-have-account {
+.login-container .login-button {
+  font-family: "Arial", sans-serif;
   font-weight: bold;
+  font-size: 18px;
+  padding: 10px 20px;
+  margin-top: 15px;
 }
 
-@media (min-width: 576px) {
-  .login-button {
-    width: auto;
-    margin-top: 1rem;
-  }
+.login-container .register-link {
+  font-family: "Arial", sans-serif;
+  font-size: 14px;
+}
+.form-icon {
+  vertical-align: middle;
+  margin-right: 8px;
 }
 
-@media (max-width: 576px) {
-  .login-icon {
-    margin-right: 0;
-    margin-bottom: 0.5rem;
-  }
+.form-input {
+  height: 48px; /* Adjust the value as per your preference */
 }

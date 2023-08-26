@@ -1,26 +1,24 @@
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-// eslint-disable-next-line no-unused-vars
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import FormContainer from "../conponents/FormContainer";
-import { useEffect, useState } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import useLogin from "../hooks/useLogin";
 import { useAuthContext } from "../hooks/useAuthContext";
+import { HiOutlineMail, HiOutlineLock } from "react-icons/hi";
+import React, { useEffect } from "react";
+import "./LoginPage.css";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const { login, isLoading, error } = useLogin();
+  const navigate = useNavigate();
+  const { user } = useAuthContext();
 
   const submitHandler = async (e) => {
     e.preventDefault();
-
     await login(email, password);
   };
-
-  const navigate = useNavigate();
-  const { user } = useAuthContext();
 
   useEffect(() => {
     if (user) {
@@ -29,43 +27,46 @@ const LoginPage = () => {
   }, [navigate, user]);
 
   return (
-    <FormContainer>
+    <div className="login-container">
       <h1>Sign In</h1>
-      {error && <Alert variant='danger'>{error}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
 
-      <Form onSubmit={submitHandler}>
-        <Form.Group controlId='email'>
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type='email'
-            placeholder='Enter email'
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
-        <Form.Group controlId='password'>
-          <Form.Label>Password</Form.Label>
-          <Form.Control
-            type='password'
-            placeholder='Enter password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          ></Form.Control>
-        </Form.Group>
+      <Form.Group controlId="email">
+        <Form.Label className="form-label">
+          <HiOutlineMail className="form-icon" /> Email Address
+        </Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          className="form-input"
+        />
+      </Form.Group>
+      <Form.Group controlId="password">
+        <Form.Label className="form-label">
+          <HiOutlineLock className="form-icon" /> Password
+        </Form.Label>
+        <Form.Control
+          type="password"
+          placeholder="Enter password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          className="form-input"
+        />
+      </Form.Group>
 
-        <Button type='submit' variant='primary' disabled={isLoading}>
-          Sign In
-        </Button>
-      </Form>
-
-      <Row className='py-3'>
+      <Row className="py-3">
         <Col>
-          New User? <Link to='/register'>Register</Link>
+          New User?{" "}
+          <Link to="/register" className="register-link">
+            Register
+          </Link>
         </Col>
       </Row>
-    </FormContainer>
+    </div>
   );
 };
 
