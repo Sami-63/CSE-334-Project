@@ -23,6 +23,8 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
     selectedFacility.price
   );
 
+  const [bookingPossible, setBookingPossible] = useState(false);
+
   const handleCheckInTimeChange = (time) => {
     const hours = Math.floor(time / 3600);
     const minutes = Math.floor((time % 3600) / 60);
@@ -31,6 +33,7 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
       .toString()
       .padStart(2, "0")}`;
     setSelectedCheckInTime(formattedTime);
+    setSelectedCheckOutTime(formattedTime);
   };
 
   const handleCheckOutTimeChange = (time) => {
@@ -100,6 +103,10 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
   };
 
   useEffect(() => {
+    setSelectedCheckInTime("06:00");
+  }, []);
+
+  useEffect(() => {
     const asyncFunction = async () => {
       if (selectedDate && selectedCheckInTime && selectedCheckOutTime) {
         // Convert selected times to JavaScript Date objects
@@ -120,9 +127,11 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
         if (response && selectedCheckInTime < selectedCheckOutTime) {
           setErrorMessage("Booking possible");
           setErrorType("success");
+          setBookingPossible(true);
         } else {
           setErrorMessage("Booking not possible");
           setErrorType("danger");
+          setBookingPossible(false);
         }
       }
     };
@@ -224,7 +233,7 @@ const PaymentModal2 = ({ show, handleClose, selectedFacility, setText }) => {
             <button
               className='confirm-button'
               type='submit'
-              disabled={isLoading}
+              disabled={isLoading || !bookingPossible}
             >
               Confirm Payment
             </button>

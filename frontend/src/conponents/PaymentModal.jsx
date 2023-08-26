@@ -15,6 +15,8 @@ const PaymentModal = ({ show, handleClose, selectedRoom, setText }) => {
   const [errorMessage, setErrorMessage] = useState("");
   const [calculatedPrice, setCalculatedPrice] = useState(selectedRoom.price);
 
+  const [bookingPossible, setBookingPossible] = useState(false);
+
   const [message, setMessage] = useState(null);
   const {
     checkBooking,
@@ -32,11 +34,13 @@ const PaymentModal = ({ show, handleClose, selectedRoom, setText }) => {
             type: "success",
             msg: "Booking possible",
           });
+          setBookingPossible(true);
         } else {
           setMessage({
             type: "danger",
             msg: "Booking not possible",
           });
+          setBookingPossible(false);
         }
       }
     };
@@ -185,7 +189,7 @@ const PaymentModal = ({ show, handleClose, selectedRoom, setText }) => {
             <button
               className='confirm-button'
               type='submit'
-              disabled={isLoading}
+              disabled={isLoading || !bookingPossible}
             >
               Confirm Payment
             </button>
