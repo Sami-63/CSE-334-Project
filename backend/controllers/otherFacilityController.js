@@ -81,4 +81,22 @@ const getFacilityById = asyncHandler(async (req, res) => {
   }
 });
 
-export { createFacility, getAllFacility, getFacilityById };
+const getFacilityByCategory = asyncHandler(async (req, res) => {
+  const { category } = req.body;
+
+  console.log("category -> ", category);
+
+  const { facilities, error } = await OtherFacility.getCategoryWiseFacility(
+    category
+  );
+
+  if (error) res.status(500);
+  else res.json(facilities);
+});
+
+export {
+  createFacility,
+  getAllFacility,
+  getFacilityById,
+  getFacilityByCategory,
+};

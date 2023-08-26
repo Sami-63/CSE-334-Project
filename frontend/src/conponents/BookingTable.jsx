@@ -5,6 +5,13 @@ import { GetAllFacilityBookings } from "../actions/facilityActions";
 import { GetAllBookings } from "../actions/bookingActions";
 import { format } from "date-fns";
 
+function formatTime(time) {
+  const date = new Date(`1970-01-01T${time}`);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
 const BookingsTable = () => {
   const {
     getRoomBookings,
@@ -80,8 +87,9 @@ const BookingsTable = () => {
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Start Date</th>
-                <th>End Date</th>
+                <th>Booking Date</th>
+                <th>Start Time</th>
+                <th>End Time</th>
                 <th>Customer Email</th>
                 <th>Facility ID</th>
                 <th>Payment Amount</th>
@@ -94,9 +102,10 @@ const BookingsTable = () => {
                   <tr key={booking.id}>
                     <td>{booking.id}</td>
                     <td>
-                      {format(new Date(booking.startDate), "MMM d, yyyy")}
+                      {format(new Date(booking.bookingDate), "MMM d, yyyy")}
                     </td>
-                    <td>{format(new Date(booking.endDate), "MMM d, yyyy")}</td>
+                    <td>{formatTime(booking.startTime)}</td>
+                    <td>{formatTime(booking.endTime)}</td>
                     <td>{booking.customerEmail}</td>
                     <td>{booking.facilityId}</td>
                     <td>{booking.paymentAmount}</td>

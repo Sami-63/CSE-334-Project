@@ -45,7 +45,7 @@ function Home() {
   return (
     <>
       <Description />
-      <Container className='m-5'>
+      <Container>
         <Row>
           <h2 className='text-center mb-4'>Our Rooms</h2>
 
@@ -70,7 +70,7 @@ function Home() {
         {facilityLoading ? <Loader /> : <></>}
         {facilityError ? <Alert>{facilityError}</Alert> : <></>}
         {Object.keys(otherFacilities).map((category) => (
-          <Container className='m-5' key={category}>
+          <Container className='my-5' key={category}>
             <Row>
               <h2 className='text-center mb-4'>{category}</h2>
 

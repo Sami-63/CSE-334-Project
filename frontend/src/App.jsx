@@ -10,12 +10,12 @@ import Footer from "./conponents/Footer";
 import Home from "./page/Home";
 import LoginPage from "./page/LoginPage";
 import RegisterPage from "./page/RegisterPage";
-import Profile from "./page/Profile";
 import RoomList from "./page/RoomList";
 import Room from "./page/Room";
 import AdminDashboad from "./page/AdminDashboad";
 import UserDashboard from "./page/UserDashboard";
 import FacilityPage from "./page/FacilityPage";
+import FacilityList from "./page/FacilityList";
 
 function App() {
   return (
@@ -25,6 +25,10 @@ function App() {
         <main className='py-3'>
           <Container>
             <Routes>
+              <Route
+                path='/facilitylist/:category'
+                element={<FacilityList />}
+              />
               <Route path='/facility/:id' element={<FacilityPage />} />
               <Route path='/room/:id' element={<Room />} />
               <Route path='/roomlist' element={<RoomList />} />

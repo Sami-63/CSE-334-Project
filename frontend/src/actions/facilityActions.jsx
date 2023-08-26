@@ -151,7 +151,7 @@ const CheckFacilityBooking = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
 
-  const checkFacilityBooking = async (id, checkinDate, checkoutdate) => {
+  const checkFacilityBooking = async (id, bookingDate, startTime, endTime) => {
     setIsLoading(true);
     setError(null);
 
@@ -164,8 +164,9 @@ const CheckFacilityBooking = () => {
         },
         body: JSON.stringify({
           id,
-          checkinDate,
-          checkoutdate,
+          bookingDate,
+          startTime,
+          endTime,
         }),
       }
     );
@@ -209,7 +210,7 @@ const GetAllFacility = () => {
     }
 
     if (response.ok) {
-      console.log("json -> ", json);
+      console.log("facility json -> ", json);
       setIsLoading(false);
       return json;
     }
@@ -263,9 +264,21 @@ const CreateFacilityBooking = () => {
 
   const { user } = useAuthContext();
 
-  const bookNow = async (checkInDate, checkOutDate, id, calculatedPrice) => {
+  const bookNow = async (
+    bookingDate,
+    startTime,
+    endTime,
+    id,
+    calculatedPrice
+  ) => {
     setIsLoading(true);
     setError(null);
+
+    console.log("[action] bookingDate => ", bookingDate);
+    console.log("[action] startTime => ", startTime);
+    console.log("[action] endTime => ", endTime);
+    console.log("[action] id => ", id);
+    console.log("[action] calculatedPrice => ", calculatedPrice);
 
     const response = await fetch(
       "http://localhost:4000/api/other-bookings/create",
@@ -276,8 +289,9 @@ const CreateFacilityBooking = () => {
           Authorization: `Bearer ${user.token}`,
         },
         body: JSON.stringify({
-          startDate: checkInDate,
-          endDate: checkOutDate,
+          bookingDate,
+          startTime,
+          endTime,
           facilityId: id,
           paymentAmount: calculatedPrice,
         }),
@@ -344,6 +358,45 @@ const GiveRatingToFacility = () => {
   return { giveFacilityRating, isLoading, error };
 };
 
+const GetFacilityByCategoty = () => {
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(null);
+
+  const getFacility = async (category) => {
+    setIsLoading(true);
+    setError(null);
+
+    const response = await fetch(
+      `http://localhost:4000/api/facility/category`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          category,
+        }),
+      }
+    );
+    const json = await response.json();
+
+    if (!response.ok) {
+      setIsLoading(false);
+      setError(json.error);
+      console.log("error = ", error);
+      return null;
+    }
+
+    if (response.ok) {
+      console.log("facility json -> ", json);
+      setIsLoading(false);
+      return json;
+    }
+  };
+
+  return { getFacility, isLoading, error };
+};
+
 export {
   GetAllFacilityBookings,
   GetFacility,
@@ -354,4 +407,5 @@ export {
   GetMyFacilityBookings,
   CreateFacilityBooking,
   GiveRatingToFacility,
+  GetFacilityByCategoty,
 };

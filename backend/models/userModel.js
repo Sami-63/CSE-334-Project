@@ -57,6 +57,11 @@ User.create = async (
       name,
       email,
       password,
+      nidNumber,
+      phoneNumber,
+      bankName,
+      accountNumber,
+      bkashNumber,
     });
     console.log("[model] user -> ", user);
     const salt = await bcrypt.genSalt(10);

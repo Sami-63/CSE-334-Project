@@ -6,6 +6,13 @@ import Loader from "./Loader";
 import StarRatingModal from "./StarRatingModal";
 import { format } from "date-fns";
 
+function formatTime(time) {
+  const date = new Date(`1970-01-01T${time}`);
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${hours}:${minutes}`;
+}
+
 const MyBookings = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [render, setRender] = useState(0);
@@ -122,8 +129,9 @@ const MyBookings = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Start Date</th>
-              <th>End Date</th>
+              <th>Booking Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
 
               <th>Facility ID</th>
               <th>Payment Amount</th>
@@ -134,8 +142,9 @@ const MyBookings = () => {
             {facilityBookings?.map((booking) => (
               <tr key={booking.id}>
                 <td>{booking.id}</td>
-                <td>{format(new Date(booking.startDate), "MMM d, yyyy")}</td>
-                <td>{format(new Date(booking.endDate), "MMM d, yyyy")}</td>
+                <td>{format(new Date(booking.bookingDate), "MMM d, yyyy")}</td>
+                <td>{formatTime(booking.startTime)}</td>
+                <td>{formatTime(booking.endTime)}</td>
 
                 <td>{booking.facilityId}</td>
                 <td>{booking.paymentAmount}</td>

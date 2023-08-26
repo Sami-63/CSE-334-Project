@@ -2,8 +2,9 @@ import conn from "../config/db.js";
 
 const OtherBooking = function (booking) {
   this.id = booking.id;
-  this.startDate = booking.startDate;
-  this.endDate = booking.endDate;
+  this.bookingDate = booking.bookingDate;
+  this.startTime = booking.startTime;
+  this.endTime = booking.endTime;
   this.customerEmail = booking.customerEmail;
   this.facilityId = booking.facilityId;
   this.paymentAmount = booking.paymentAmount;
@@ -130,30 +131,34 @@ OtherBooking.getBookingsByEmail = async (email) => {
   }
 };
 
-OtherBooking.filterFacility = async (checkinDate, checkoutdate) => {
+OtherBooking.filterFacility = async (bookingDate, startTime, endTime) => {
   try {
     const otherbookings = await new Promise((resolve, reject) => {
       conn.query(
         `SELECT *
-        FROM otherfacility
+        FROM otherFacility
         WHERE id NOT IN (
-            SELECT DISTINCT facilityId
-            FROM otherbooking
-            WHERE (startDate <= ? AND endDate >= ?)
-               OR (startDate <= ? AND endDate >= ?)
-               OR (? <= startDate AND ? >= startDate)
-               OR (? <= endDate AND ? >= endDate)
-        )
+            SELECT facilityId
+            FROM otherBooking
+            WHERE bookingDate = ?
+                AND (
+                    (startTime <= ? AND ? <= endTime) OR
+                    (? <= startTime AND ? <= endTime) OR
+                    (startTime <= ? AND endTime <= ?) OR
+                    (? <= startTime AND endTime <= ?) 
+                )
+        );
         `,
         [
-          checkinDate,
-          checkinDate,
-          checkoutdate,
-          checkoutdate,
-          checkinDate,
-          checkoutdate,
-          checkinDate,
-          checkoutdate,
+          bookingDate,
+          startTime,
+          endTime,
+          startTime,
+          endTime,
+          startTime,
+          endTime,
+          startTime,
+          endTime,
         ],
         (err, res) => {
           if (err) reject(err);
@@ -170,7 +175,12 @@ OtherBooking.filterFacility = async (checkinDate, checkoutdate) => {
   }
 };
 
-OtherBooking.isBookingPossible = async (id, startDate, endDate) => {
+OtherBooking.isBookingPossible = async (
+  id,
+  bookingDate,
+  startTime,
+  endTime
+) => {
   try {
     const response = await new Promise((resolve, reject) => {
       conn.query(
@@ -178,22 +188,26 @@ OtherBooking.isBookingPossible = async (id, startDate, endDate) => {
         FROM otherfacility
         WHERE id = ? AND id NOT IN (
             SELECT DISTINCT facilityId
-            FROM otherbooking
-            WHERE (startDate <= ? AND endDate >= ?)
-               OR (startDate <= ? AND endDate >= ?)
-               OR (? <= startDate AND ? >= startDate)
-               OR (? <= endDate AND ? >= endDate)
+            FROM otherBooking
+            WHERE bookingDate = ?
+                AND (
+                  (StartTime <= ? AND endTime >= ?)
+                  OR (StartTime <= ? AND endTime >= ?)
+                  OR (? <= StartTime AND ? >= StartTime)
+                  OR (? <= endTime AND ? >= endTime)
+                )
         )`,
         [
           id,
-          startDate,
-          startDate,
-          endDate,
-          endDate,
-          startDate,
-          endDate,
-          startDate,
-          endDate,
+          bookingDate,
+          startTime,
+          startTime,
+          endTime,
+          endTime,
+          startTime,
+          endTime,
+          startTime,
+          endTime,
         ],
         (err, res) => {
           if (err) reject(err);

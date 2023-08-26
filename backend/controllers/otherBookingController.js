@@ -2,19 +2,29 @@ import asyncHandler from "express-async-handler";
 import OtherBooking from "../models/otherBookingModel.js";
 
 const createFacilityBooking = asyncHandler(async (req, res) => {
-  const { startDate, endDate, facilityId, paymentAmount } = req.body;
+  const { bookingDate, startTime, endTime, facilityId, paymentAmount } =
+    req.body;
   const email = req.user.email;
 
-  console.log("[controller] startDate => ", startDate);
-  console.log("[controller] endDate => ", endDate);
+  console.log("[controller] bookingDate => ", bookingDate);
+  console.log("[controller] startTime => ", startTime);
+  console.log("[controller] endTime => ", endTime);
   console.log("[controller] facilityId => ", facilityId);
   console.log("[controller] paymentAmount => ", paymentAmount);
   console.log("[controller] email => ", email);
 
-  if (startDate && endDate && facilityId && paymentAmount) {
+  if (
+    bookingDate &&
+    startTime &&
+    endTime &&
+    facilityId &&
+    paymentAmount &&
+    startTime < endTime
+  ) {
     const otherbooking = new OtherBooking({
-      startDate,
-      endDate,
+      bookingDate,
+      startTime,
+      endTime,
       facilityId,
       paymentAmount,
       customerEmail: email,
@@ -33,6 +43,12 @@ const createFacilityBooking = asyncHandler(async (req, res) => {
     }
   } else {
     res.status(500);
+    console.log("bookingDate  -> ", bookingDate);
+    console.log("startTime  -> ", startTime);
+    console.log("endTime  -> ", endTime);
+    console.log("facilityId  -> ", facilityId);
+    console.log("paymentAmount  -> ", paymentAmount);
+    console.log("startTime < endTime -> ", startTime < endTime);
     throw new Error("For other booking all fields must be filled");
   }
 });
@@ -96,7 +112,7 @@ const myOtherBookings = asyncHandler(async (req, res) => {
 });
 
 const filterFacility = asyncHandler(async (req, res) => {
-  const { checkinDate, checkoutdate } = req.body;
+  const { bookingDate, startTime, endTime } = req.body;
 
   // console.log("body => ", req.body);
 
@@ -107,8 +123,9 @@ const filterFacility = asyncHandler(async (req, res) => {
   // console.log("[controller]  acRequired -> ", acRequired);
 
   const { otherbookings, error } = await OtherBooking.filterFacility(
-    checkinDate,
-    checkoutdate
+    bookingDate,
+    startTime,
+    endTime
   );
 
   if (!error) {
@@ -119,20 +136,24 @@ const filterFacility = asyncHandler(async (req, res) => {
   }
 });
 const isFacilityBookingPossible = asyncHandler(async (req, res) => {
-  const { id, checkinDate, checkoutdate } = req.body;
+  const { id, bookingDate, startTime, endTime } = req.body;
 
-  console.log(
-    "id, checkinDate, checkoutdate => ",
-    id,
-    checkinDate,
-    checkoutdate
-  );
+  console.log("[controller] id => ", id);
+  console.log("[controller] bookingDate => ", bookingDate);
+  console.log("[controller] startTime => ", startTime);
+  console.log("[controller] endTime => ", endTime);
 
-  if (id && checkinDate && checkoutdate) {
+  console.log("[controller] id -> ", typeof id);
+  console.log("[controller] bookingDate -> ", typeof bookingDate);
+  console.log("[controller] startTime -> ", typeof startTime);
+  console.log("[controller] endTime -> ", typeof endTime);
+
+  if (id && bookingDate && startTime && endTime) {
     const { response, error } = await OtherBooking.isBookingPossible(
       id,
-      checkinDate,
-      checkoutdate
+      bookingDate,
+      startTime,
+      endTime
     );
 
     res.json({

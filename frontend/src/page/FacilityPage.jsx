@@ -75,6 +75,9 @@ const FacilityPage = () => {
                   <Card.Body>
                     <Card.Title>{facility.title}</Card.Title>
                     <Card.Text>Rating: {facility.rating}/5</Card.Text>
+                    <Card.Text>
+                      Price: <b>{facility.price} BDT</b> per hour
+                    </Card.Text>
                     <Card.Text>{facility.description}</Card.Text>
                     <Button variant='primary' onClick={handleSubmit}>
                       Book Now

@@ -44,6 +44,12 @@
   margin-right: 5px;
 }
 
+.clock-icon {
+  font-size: 1.2rem;
+  color: #1abc9c;
+  margin-right: 5px;
+}
+
 .input-field {
   flex: 1;
   padding: 8px;
