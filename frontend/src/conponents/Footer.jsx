@@ -8,8 +8,7 @@ const Footer = () => {
           <Col md={4} className='mb-4'>
             <h5>About Us</h5>
             <p>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc
-              cursus lectus in ex hendrerit, sit amet ultrices leo tempus.
+            Experience pure luxury at "Paradise Cove" - a breathtaking oasis of elegance. Indulge in lavish accommodations, exquisite dining, and rejuvenating spa treatments. Discover a realm of unparalleled opulence and create memories that will last a lifetime.
             </p>
           </Col>
           <Col md={4} className='mb-4'>

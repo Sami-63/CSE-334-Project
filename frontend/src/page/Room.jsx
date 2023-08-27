@@ -1,18 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-  Button,
-  Card,
-  Col,
-  Container,
-  Image,
-  Row,
-  Alert,
-} from "react-bootstrap";
+import { Button, Card, Col, Container, Image, Row, Alert } from "react-bootstrap";
 import { useNavigate, useParams } from "react-router-dom";
 import { GetRoom } from "../actions/roomActions";
 import { useAuthContext } from "../hooks/useAuthContext";
 import Loader from "../conponents/Loader";
 import PaymentModal from "../conponents/PaymentModal";
+import './Room.css';
 
 const Room = () => {
   const { id } = useParams();
@@ -29,8 +22,7 @@ const Room = () => {
     imgUrl: "",
   });
 
-  const [showPaymentModal, setShowPaymentModal] = useState(false); // New state for PaymentModal
-
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { getRoom, isLoading, error } = GetRoom();
   const { user } = useAuthContext();
   const navigate = useNavigate();
@@ -47,7 +39,7 @@ const Room = () => {
     e.preventDefault();
     if (!user) navigate("/login");
     else {
-      handleOpenPaymentModal(); // Open PaymentModal when submitting the form
+      handleOpenPaymentModal();
     }
   };
 
@@ -67,13 +59,14 @@ const Room = () => {
   }, [id]);
 
   return (
-    <Card>
+    <div className="container">
+    <Card className="room-card">
       {isLoading && <Loader />}
-      {error && <Alert variant='danger'>{error}</Alert>}
+      {error && <Alert variant="danger">{error}</Alert>}
       {!isLoading && (
         <Card.Body>
           <Card.Title>{roomData.title}</Card.Title>
-          <Card.Text>Rating: {roomData.rating}/5</Card.Text>
+          <Card.Text className="rating">Rating: {roomData.rating}/5</Card.Text>
           <Container>
             <Row>
               <Col md={8}>
@@ -82,20 +75,28 @@ const Room = () => {
               <Col md={3}>
                 <Row>
                   <Col>
-                    <Card.Text>Capacity:</Card.Text>
-                    <Card.Text>{roomData.personCount} persons</Card.Text>
-                    <Card.Text>{roomData.bedroomCount} bedrooms</Card.Text>
-                    <Card.Text>
+                    <Card.Text className="room-info">
+                      Capacity: {roomData.personCount}
+                    </Card.Text>
+                    <Card.Text className="room-info">
+                      Bedrooms: {roomData.bedroomCount}
+                    </Card.Text>
+                    <Card.Text className="room-info">
+                      Price: {roomData.price}
+                    </Card.Text>
+                    <Card.Text className="room-info">
                       Air Conditioning: {roomData.acCount ? "Yes" : "No"}
                     </Card.Text>
-                    <Card.Text>{roomData.description}</Card.Text>
+                    <Card.Text className="room-info">
+                    {roomData.description} 
+                    </Card.Text>
                   </Col>
                 </Row>
                 <Row>
                   <Button
-                    variant='primary'
-                    type='submit'
-                    className='my-3'
+                    variant="primary"
+                    type="submit"
+                    className="my-3 book-now-button"
                     onClick={handleSubmit}
                   >
                     Book Now
@@ -107,9 +108,8 @@ const Room = () => {
         </Card.Body>
       )}
 
-      {message && <Alert variant='success'>{message}</Alert>}
+      {message && <Alert variant="success">{message}</Alert>}
 
-      {/* PaymentModal component */}
       {showPaymentModal && (
         <PaymentModal
           show={showPaymentModal}
@@ -120,6 +120,7 @@ const Room = () => {
         />
       )}
     </Card>
+    </div>
   );
 };
 
