@@ -8,6 +8,9 @@ import "./UserDashboard.css"; // Import your CSS file for custom styling
 import AddRoomForm from "../conponents/AddRoomForm";
 import AddFacilitiesForm from "../conponents/AddFacilitiesForm";
 import ViewBookingsForm from "../conponents/ViewBookingsForm";
+import RoomList from "./RoomList";
+import EditRoom from "./EditRoom";
+import AllRooms from "../conponents/AllRooms";
 
 const UserDashboard = () => {
   const [activeTab, setActiveTab] = useState("profile");
@@ -29,6 +32,8 @@ const UserDashboard = () => {
         return <Profile />;
       case "addroom":
         return <AddRoomForm />;
+        case "editroom":
+        return <AllRooms />;
       case "addfacility":
         return <AddFacilitiesForm />;
       case "getallbookings":
@@ -71,6 +76,15 @@ const UserDashboard = () => {
                 onClick={() => setActiveTab("addroom")}
               >
                 Add Room
+              </Button>
+              <Button
+                variant='primary'
+                className={`dashboard-button add-room-button ${
+                  activeTab === "editroom" ? "active" : ""
+                }`}
+                onClick={() => setActiveTab("editroom")}
+              >
+                Edit Room
               </Button>
 
               <Button

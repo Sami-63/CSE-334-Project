@@ -27,8 +27,9 @@ const LoginPage = () => {
 
   const images = [
     "https://img.freepik.com/free-photo/beautiful-luxury-outdoor-swimming-pool-hotel-resort_74190-7433.jpg",
-    "https://img.freepik.com/free-photo/beautiful-silhouette-palm-tree-with-umbrella-chair_74190-2099.jpg?w=360",
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf7SDYpiNXfebX1h2_wNgCYAXh-wig0E7FQ9nFMrsNWDvfel-Id_D4WMPMDqtw3ZpGv6E&usqp=CAU",
+    "https://www.goldencitystudio.in/assets/asset/images/blog/hotel.jpg",
+    "https://barbaracameronpix.com/wp-content/uploads/2021/10/bcp_190822_6235.jpg",
+    "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8aG90ZWxzfGVufDB8fDB8fHww&w=1000&q=80",
   ];
 
   const [activeImageIndex, setActiveImageIndex] = useState(0);

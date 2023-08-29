@@ -1,0 +1,43 @@
+.room-card {
+    border: none;
+    margin-top: 8%;
+    margin-left: 8%;
+    width: 80%;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .rating {
+    font-weight: bold;
+    color: #f8b400;
+  }
+  
+  .room-info {
+    font-weight: bold;
+    color: #333;
+    margin-left: -5px; /* Adjust the left margin as needed */
+  }
+  
+  .description {
+    margin-top: 10px;
+    color: #666;
+    margin-left: -5px; /* Adjust the left margin as needed */
+  }
+  
+  .book-now-button {
+    padding: 10px 20px;
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .book-now-button:hover {
+    background-color: #0d6efd;
+  }
+  
+  .room-image {
+    max-width: 150%; /* Adjust the image size as needed */
+    margin-bottom: px;
+  }

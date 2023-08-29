@@ -26,7 +26,7 @@ const NavigationBar = () => {
             <LinkContainer to='/'>
               <Nav.Link>
                 <RiHome2Line className='home-icon' />
-                Hotel
+                Paradise Cove
               </Nav.Link>
             </LinkContainer>
           </Navbar.Brand>

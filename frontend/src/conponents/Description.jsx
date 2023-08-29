@@ -20,10 +20,10 @@ const Description = () => {
               whether for business or leisure.
             </p>
             {!user && (
-              <LinkContainer to='/register'>
-                <Button>Get Started &raquo;</Button>
-              </LinkContainer>
-            )}
+  <LinkContainer to='/register'>
+    <a style={{ fontSize: '48px' }}>Get Started &raquo;</a>
+  </LinkContainer>
+)}
           </Col>
           <Col md={6} className='text-center'>
             <img
