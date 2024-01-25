@@ -1,7 +1,5 @@
-# Online Reservation and Management System
-# Title
+# Online Reservation and Management System for a Multi-Facility Hotel.
 
-## Online Reservation and Management System for a Multi-Facility Hotel.
 ## Goal
 The goal of the proposed Online Reservation and Management System is to create an efficient and user-friendly platform that automates the process of reserving and managing various facilities in a multi-facility hotel. The system aims to provide real-time facility availability information, enable online bookings, and enhance customer satisfaction through improved convenience and accuracy.
 
